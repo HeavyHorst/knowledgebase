@@ -1,0 +1,173 @@
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"net/http"
+
+	"github.com/HeavyHorst/sunoKB/pkg/models"
+	"github.com/pressly/chi"
+)
+
+func categoryCtx(store CategoryGetter) func(next http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			cat, err := store.GetCategory(chi.URLParam(r, "categoryID"))
+			if err != nil {
+				logAndHTTPError(w, r, 404, http.StatusText(404), err)
+				return
+			}
+
+			if cat.ID != "" {
+				ctx := context.WithValue(r.Context(), contextKeyCategory, cat)
+				next.ServeHTTP(w, r.WithContext(ctx))
+			} else {
+				next.ServeHTTP(w, r)
+			}
+		})
+	}
+}
+
+func listCategories(store CategoryLister) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		result, err := store.ListCategories()
+		if err != nil {
+			logAndHTTPError(w, r, 500, err.Error(), err)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		if err = json.NewEncoder(w).Encode(result); err != nil {
+			logAndHTTPError(w, r, 500, err.Error(), err)
+			return
+		}
+	}
+}
+
+func searchCategories(store CategorySearcher) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		r.ParseForm()
+
+		if len(r.Form.Get("q")) < 3 {
+			http.Error(w, "query too short", 422)
+			return
+		}
+
+		categories, err := store.SearchCategories(r.Form.Get("q"))
+		if err != nil {
+			logAndHTTPError(w, r, 500, err.Error(), err)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		if err = json.NewEncoder(w).Encode(categories); err != nil {
+			logAndHTTPError(w, r, 500, err.Error(), err)
+			return
+		}
+	}
+}
+
+func listCategoriesForCategory(store CategoryLister) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		result, err := store.ListCategoriesForCategory(chi.URLParam(r, "categoryID"))
+		if err != nil {
+			http.Error(w, http.StatusText(404), 404)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		if err = json.NewEncoder(w).Encode(result); err != nil {
+			logAndHTTPError(w, r, 500, err.Error(), err)
+			return
+		}
+	}
+}
+
+func getCategory(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	cat, ok := ctx.Value(contextKeyCategory).(models.Category)
+	if !ok {
+		http.Error(w, http.StatusText(422), 422)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	if err := json.NewEncoder(w).Encode(cat); err != nil {
+		logAndHTTPError(w, r, 500, err.Error(), err)
+		return
+	}
+}
+
+func createCategory(store CategoryCreator) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var cat models.Category
+
+		err := json.NewDecoder(r.Body).Decode(&cat)
+		if err != nil {
+			logAndHTTPError(w, r, 500, err.Error(), err)
+			return
+		}
+
+		cat.ID = getULID()
+
+		err = store.CreateCategory(cat)
+		if err != nil {
+			logAndHTTPError(w, r, 500, err.Error(), err)
+			return
+		}
+
+		w.Header().Set("Location", "/api/categories/"+cat.ID)
+		w.WriteHeader(http.StatusCreated)
+	}
+}
+
+func updateCategory(store CategoryUpdater) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		cat, ok := ctx.Value(contextKeyCategory).(models.Category)
+		id := cat.ID
+		if !ok {
+			http.Error(w, http.StatusText(422), 422)
+			return
+		}
+
+		err := json.NewDecoder(r.Body).Decode(&cat)
+		if err != nil {
+			logAndHTTPError(w, r, 500, err.Error(), err)
+			return
+		}
+
+		cat.ID = id
+		// update store
+		err = store.UpdateCategory(cat)
+		if err != nil {
+			logAndHTTPError(w, r, 500, err.Error(), err)
+			return
+		}
+
+		w.WriteHeader(http.StatusCreated)
+	}
+}
+
+func deleteCategory(store CategoryDeleter) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		cat, ok := ctx.Value(contextKeyCategory).(models.Category)
+		if !ok {
+			http.Error(w, http.StatusText(422), 422)
+			return
+		}
+
+		err := store.DeleteCategory(cat)
+		if err != nil {
+			logAndHTTPError(w, r, 500, err.Error(), err)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		if err = json.NewEncoder(w).Encode(cat); err != nil {
+			logAndHTTPError(w, r, 500, err.Error(), err)
+			return
+		}
+	}
+}
