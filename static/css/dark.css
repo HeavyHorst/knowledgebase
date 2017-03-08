@@ -1,0 +1,29 @@
+#article, a, .mdl-layout__header-row {
+    color: white;
+    font-weight: 600;
+}
+
+.mdl-layout__header-row, #article, #articlebox, .mdl-layout__content {
+    background: #252323;
+}
+
+.mdl-layout-title > a {
+    text-decoration: none;
+    color: white;
+}
+
+.mdl-textfield__label {
+    color: white;
+}
+
+.tablecard, .mdl-card, .tablecard > tbody > tr:hover {
+    background: #323232;
+}
+
+.mdl-card__supporting-text, .mdl-card__title {
+    color: white;
+}
+
+.card-tags {
+    color: rgba(255, 255, 255, .54);
+}
