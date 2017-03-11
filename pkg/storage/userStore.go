@@ -34,8 +34,10 @@ func newUserStore(store *bolthold.Store, is ImageStore) (*UserStore, error) {
 
 	if un != "" {
 		err = userstore.CreateUser(models.User{
-			Username: un,
-			IsAdmin:  true,
+			UserInfo: models.UserInfo{
+				Username: un,
+			},
+			IsAdmin: true,
 		}, pw)
 	}
 

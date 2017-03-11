@@ -5,7 +5,9 @@ import (
 
 	msgpack "gopkg.in/vmihailenco/msgpack.v2"
 
+	"github.com/HeavyHorst/sunoKB/pkg/models"
 	"github.com/boltdb/bolt"
+	"github.com/pkg/errors"
 	"github.com/timshannon/bolthold"
 )
 
@@ -44,17 +46,17 @@ func NewBoltHoldClient(path string) (*BoltHoldClient, error) {
 		return nil, err
 	}
 
-	as, err := newArticleStore(store)
+	us, err := newUserStore(store, is)
+	if err != nil {
+		return nil, err
+	}
+
+	as, err := newArticleStore(store, us)
 	if err != nil {
 		return nil, err
 	}
 
 	cs, err := newCategoryStore(store, is)
-	if err != nil {
-		return nil, err
-	}
-
-	us, err := newUserStore(store, is)
 	if err != nil {
 		return nil, err
 	}
@@ -77,4 +79,14 @@ func (b *BoltHoldClient) Backup(w io.Writer) error {
 
 func (b *BoltHoldClient) GetImage(hash string) []byte {
 	return b.ImageStore.Get(hash)
+}
+
+func (b *BoltHoldClient) UpdateUser(user models.User, password string) error {
+	err := b.UserStore.UpdateUser(user, password)
+	if err != nil {
+		return err
+	}
+
+	err = b.ArticleStore.updateAllAuthors(user)
+	return errors.Wrap(err, "couldn't update the article authors")
 }

@@ -23,17 +23,21 @@ type ArticleGetter interface {
 	GetArticle(id string) (models.Article, error)
 }
 
+type ArticleHistoryGetter interface {
+	GetArticleHistory(artID string) ([]models.ArticleHistoryEntry, error)
+}
+
 type ArticleLister interface {
 	ListArticles(limit, offset int) ([]models.Article, error)
 	ListArticlesForCategory(catID string) ([]models.Article, error)
 }
 
 type ArticleCreator interface {
-	CreateArticle(models.Article) error
+	CreateArticle(art models.Article, author models.User) error
 }
 
 type ArticleUpdater interface {
-	UpdateArticle(models.Article) error
+	UpdateArticle(art models.Article, author models.User) error
 }
 
 type ArticleDeleter interface {

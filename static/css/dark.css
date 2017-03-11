@@ -20,6 +20,10 @@
     background: #323232;
 }
 
+.mdl-data-table {
+    background: #323232;
+}
+
 .mdl-card__supporting-text, .mdl-card__title {
     color: white;
 }

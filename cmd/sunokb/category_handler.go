@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/HeavyHorst/sunoKB/pkg/models"
+	"github.com/HeavyHorst/sunoKB/pkg/ulid"
 	"github.com/pressly/chi"
 )
 
@@ -108,7 +109,7 @@ func createCategory(store CategoryCreator) func(w http.ResponseWriter, r *http.R
 			return
 		}
 
-		cat.ID = getULID()
+		cat.ID = ulid.GetULID()
 
 		err = store.CreateCategory(cat)
 		if err != nil {

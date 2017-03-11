@@ -8,7 +8,7 @@ import (
 )
 
 type TokenGenerator interface {
-	GenerateToken(username, password string) (string, error)
+	GenerateToken(username, password string, admin bool) (string, error)
 	GetSecret() []byte
 }
 
@@ -18,12 +18,13 @@ type JWTTokenGenerator struct {
 	Exp    int64
 }
 
-func (j *JWTTokenGenerator) GenerateToken(username, password string) (string, error) {
+func (j *JWTTokenGenerator) GenerateToken(username, password string, admin bool) (string, error) {
 	token := jwt.New(j.Method)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["exp"] = j.Exp
 	claims["iat"] = time.Now().Unix()
 	claims["sub"] = username
+	claims["isAdmin"] = admin
 	tokenString, err := token.SignedString(append([]byte(password), j.Secret...))
 	if err != nil {
 		return "", errors.Wrapf(err, "couldn't generate the token")

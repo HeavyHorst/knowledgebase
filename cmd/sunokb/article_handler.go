@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/HeavyHorst/sunoKB/pkg/models"
+	"github.com/HeavyHorst/sunoKB/pkg/ulid"
 	"github.com/pressly/chi"
 )
 
@@ -72,6 +73,13 @@ func listArticles(store ArticleLister) func(w http.ResponseWriter, r *http.Reque
 
 func createArticle(store ArticleCreator) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		user, ok := ctx.Value(contextKeyCurrentUser).(models.User)
+		if !ok {
+			http.Error(w, http.StatusText(422), 422)
+			return
+		}
+
 		var art models.Article
 
 		err := json.NewDecoder(r.Body).Decode(&art)
@@ -81,9 +89,9 @@ func createArticle(store ArticleCreator) func(w http.ResponseWriter, r *http.Req
 			return
 		}
 
-		art.ID = getULID()
+		art.ID = ulid.GetULID()
 
-		err = store.CreateArticle(art)
+		err = store.CreateArticle(art, user)
 		if err != nil {
 			logAndHTTPError(w, r, 500, err.Error(), err)
 			return
@@ -133,6 +141,22 @@ func listArticlesForCategory(store ArticleLister) func(w http.ResponseWriter, r 
 	}
 }
 
+func getArticleHistory(store ArticleHistoryGetter) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		result, err := store.GetArticleHistory(chi.URLParam(r, "articleID"))
+		if err != nil {
+			http.Error(w, http.StatusText(404), 404)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		if err = json.NewEncoder(w).Encode(result); err != nil {
+			logAndHTTPError(w, r, 500, err.Error(), err)
+			return
+		}
+	}
+}
+
 func getArticle(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	art, ok := ctx.Value(contextKeyArticle).(models.Article)
@@ -151,6 +175,13 @@ func getArticle(w http.ResponseWriter, r *http.Request) {
 func updateArticle(store ArticleUpdater) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
+
+		user, ok := ctx.Value(contextKeyCurrentUser).(models.User)
+		if !ok {
+			http.Error(w, http.StatusText(422), 422)
+			return
+		}
+
 		art, ok := ctx.Value(contextKeyArticle).(models.Article)
 		id := art.ID
 		if !ok {
@@ -166,7 +197,7 @@ func updateArticle(store ArticleUpdater) func(w http.ResponseWriter, r *http.Req
 		}
 
 		art.ID = id
-		err = store.UpdateArticle(art)
+		err = store.UpdateArticle(art, user)
 		if err != nil {
 			logAndHTTPError(w, r, 500, err.Error(), err)
 			return

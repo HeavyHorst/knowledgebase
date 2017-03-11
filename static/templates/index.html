@@ -86,7 +86,40 @@
                <div class="mdl-card__title">
                   <h2 class="mdl-card__title-text">{{article.title}}</h2>
                </div>
-               <div class="card-tags"> {{ printTime(article.last_modified) }} </div>
+
+
+            <table class="mdl-data-table">
+               <tbody>
+                  <tr>
+                     <td class="mdl-data-table__cell--non-numeric noborder">
+               <div class="avatar__photo avatars__images o__ltr mdl-data-table__cell--non-numeric" style="width: 32px;">
+                  <template v-for="author in article.authors.slice().reverse()">
+                        <img :src="author.image" class="avatar__image">
+                  </template>
+               </div>
+                     </td>
+                     <td class="mdl-data-table__cell--non-numeric content_text noborder">
+               <div class="card-tags">
+                     von {{ article.authors.slice().reverse().map(function(author){ 
+                           return author.first_name + ' ' + author.last_name
+                             }).filter(function (x, i, a) { 
+                                return a.indexOf(x) == i; 
+                             }).join(", ")
+                         }}
+                  <br>
+                  {{ printTime(article.last_modified) }} aktualisiert 
+               </div>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+
+
+
+
+
+
+
                <div class="mdl-card__supporting-text">
                   <template v-if="article.fragments">
                      <template v-if="article.fragments.article">

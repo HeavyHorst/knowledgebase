@@ -107,7 +107,7 @@ func authenticate(store Authenticator, tokenGenerator auth.TokenGenerator) func(
 			return
 		}
 
-		token, err := tokenGenerator.GenerateToken(user.Username, user.Password)
+		token, err := tokenGenerator.GenerateToken(user.Username, user.Password, user.IsAdmin)
 		if err != nil {
 			logAndHTTPError(w, r, 500, err.Error(), err)
 			return
@@ -130,7 +130,7 @@ func refreshToken(store auth.TokenGenerator) func(w http.ResponseWriter, r *http
 			return
 		}
 
-		token, err := store.GenerateToken(user.Username, user.Password)
+		token, err := store.GenerateToken(user.Username, user.Password, user.IsAdmin)
 		if err != nil {
 			logAndHTTPError(w, r, 500, err.Error(), err)
 			return

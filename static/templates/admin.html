@@ -104,9 +104,10 @@
                      <thead>
                         <tr>
                            <th class="mdl-data-table__cell--non-numeric sort" data-sort="titel" style="width: 15%; min-width: 100px;">Titel</th>
-                           <th class="mdl-data-table__cell--non-numeric sort" data-sort="beschreibung" style="width: 40%;">Beschreibung</th>
-                           <th class="mdl-data-table__cell--non-numeric" style="width: 30%;">Tags</th>
-                           <th class="mdl-data-table__cell--non-numeric" style="width: 10%;">zuletzt geändert</th>
+                           <th class="mdl-data-table__cell--non-numeric sort" data-sort="beschreibung" style="width: 30%;">Beschreibung</th>
+                           <th class="mdl-data-table__cell--non-numeric" style="width: 20%;">Tags</th>
+                           <th class="mdl-data-table__cell--non-numeric" style="width: 10%;">Autoren</th>
+                           <th class="mdl-data-table__cell--non-numeric" style="width: 20%;">zuletzt geändert</th>
                            <th class="mdl-data-table__cell--non-numeric" style="width: 5%;">
                               <button class="mdl-button mdl-js-button mdl-button--icon" v-on:click="newArticleDialog">
                               <i class="material-icons">add</i>
@@ -136,8 +137,26 @@
                                     </span>
                                  </template>
                               </td>
+
+
+                              <td class="avatar__photo avatars__images o__ltr mdl-data-table__cell--non-numeric">
+                                 <template v-for="author in article.authors.slice().reverse()">
+                                    <img :src="author.image" class="avatar__image">
+                                 </template>
+                              </td>
+
+
+
                               <td class="mdl-data-table__cell--non-numeric wrap">
-                                 {{ printTime(article.last_modified) }}
+                                von {{ 
+                                    article.authors.slice().reverse().map(function(author){ 
+                                        return author.first_name + ' ' + author.last_name
+                                    }).filter(function (x, i, a) { 
+                                        return a.indexOf(x) == i; 
+                                    }).join(", ")
+                                 }}
+                                 <br>
+                                 {{ printTime(article.last_modified) }} aktualisiert
                               </td>
                               <td class="mdl-data-table__cell--non-numeric" style="overflow:visible;">
                                  <button :id="article.ID + '-menu'" class="mdl-button mdl-js-button mdl-button--icon">

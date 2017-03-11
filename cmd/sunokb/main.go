@@ -69,7 +69,7 @@ func main() {
 
 	r.Route("/admin", func(r chi.Router) {
 		r.Get("/", fileHandler("static/templates/admin.html"))
-		r.Get("/backup", backupDBHandler(store))
+		r.With(rta, requireAdmin).Get("/backup", backupDBHandler(store))
 	})
 
 	r.Route("/api", func(r chi.Router) {
@@ -110,6 +110,7 @@ func main() {
 			r.Route("/:articleID", func(r chi.Router) {
 				r.Use(articleCtx(store))
 				r.Get("/", getArticle)
+				r.Get("/history", getArticleHistory(store))
 				r.With(rta).Put("/", updateArticle(store))
 				r.With(rta).Delete("/", deleteArticle(store))
 			})

@@ -19,6 +19,14 @@ img, video {
     border-radius: 50%;
 }
 
+.noborder {
+    border: none !important;
+}
+
+.demo-card-square .mdl-data-table tbody tr:hover {
+    background-color: inherit !important;
+}
+
 img.wp-smiley, img.emoji {
     display: inline !important;
     border: none !important;
@@ -270,6 +278,10 @@ a:-webkit-any-link {
     font-size: 16px !important;
     letter-spacing: .004em;
     font-family: 'Quicksand', sans-serif !important;
+}
+
+.demo-card-square > .mdl-card__supporting-text {
+    padding-top: 0px;
 }
 
 .mdl-list__item {
@@ -607,4 +619,38 @@ form textarea {
 
 .cf:after {
   clear: both;
+}
+
+/*avatar stuff*/
+
+.avatar__info, .avatar__photo {
+    line-height: 1.4;
+}
+
+.avatar__photo {
+    margin-right: 10px;
+}
+
+.avatar__image {
+    width: 32px;
+    height: 32px;
+    vertical-align: bottom;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px white;
+    position: relative;
+    z-index: 4;
+}
+
+.avatar__image:nth-child(2) {
+    z-index: 3;
+    opacity: .8;
+}
+
+.avatar__image:nth-child(3) {
+    z-index: 2;
+    opacity: .6;
+}
+
+.avatar__image:nth-child(n+2) {
+    margin-left: -8px;
 }
