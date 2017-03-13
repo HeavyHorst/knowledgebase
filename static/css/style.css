@@ -176,10 +176,16 @@ a:-webkit-any-link {
     border: 1px solid #d4dadf;
 }
 
-.tablecard * .content__logo img {
+.article__list_logo img {
+    max-width: 32px;
+    width: 32px;
+    margin-right: 20px;
+}
+
+/*.tablecard * .content__logo img {
     max-width: 64px;
     width: 64px;
-}
+}*/
 
 .content__logo img {
     max-width: 64px;
@@ -286,6 +292,8 @@ a:-webkit-any-link {
 
 .mdl-list__item {
     font-family: 'Quicksand', sans-serif !important;
+    letter-spacing: inherit;
+    padding: 0px 0px 0px 16px;
 }
 
 .mdl-list__item-text-body {

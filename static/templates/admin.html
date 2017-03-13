@@ -59,11 +59,11 @@
                <template v-if="view == 'categories'">
                   <ul class="demo-list-three mdl-list">
                      <template v-for="category in categories">
-                        <li class="mdl-list__item mdl-list__item--three-line" :id=category.ID v-bind:style="{ overflow: 'visible', marginLeft: category.margin + 'px' }">
+                        <li class="mdl-list__item" :id=category.ID v-bind:style="{ overflow: 'visible', marginLeft: category.margin + 'px' }">
                            <div class="black" style="width: 100%;">
                               <span class="mdl-list__item-primary-content" v-on:click="fetchArticlesForCategory">
-                                 <div class="content__logo"><img :src="category.image"></div>
-                                 <span class="titel">{{category.title}}</span>
+                                 <div class="article__list_logo"><img :src="category.image"></div>
+                                 <span class="titel" style="margin-right: 1em;">{{category.title}}</span>
                                  <span class="mdl-list__item-text-body beschreibung" style="overflow: hidden;">
                                  {{category.description}}
                                  </span>
@@ -80,6 +80,7 @@
                               </ul>
                            </span>
                         </li>
+                        <template v-if="category.fragments">
                         <p style="margin-top: 10px;">
                            <template v-for="(value, key) in category.fragments">
                         <ul style="font-size: 11px;line-height: 20px;">
@@ -91,6 +92,7 @@
                         </ul>
                         </template>
                         </p>
+                        </template>
                         <hr>
                      </template>
                   </ul>
