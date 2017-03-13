@@ -290,10 +290,11 @@ a:-webkit-any-link {
     padding-top: 0px;
 }
 
-.mdl-list__item {
+.adminContent .mdl-list__item {
     font-family: 'Quicksand', sans-serif !important;
     letter-spacing: inherit;
     padding: 0px 0px 0px 16px;
+    min-height: 32px;
 }
 
 .mdl-list__item-text-body {
@@ -394,6 +395,10 @@ a {
   width: 100%;
 }
 
+.center {
+    text-align: center !important;
+}
+
 .demo-navigation .mdl-navigation__link {
     font-size: 17px;
 }
@@ -444,15 +449,6 @@ dialog > div.mdl-dialog__content > form > div.mdl-textfield {
     right: 30px;
     bottom: 30px;
     z-index: 5;
-}
-
-.bottom_center_fixed {
-    position: fixed;
-    bottom: 30px;
-    left: 55%;
-    z-index: 500;
-    cursor: pointer;
-    user-select: none;
 }
 
 dialog.animate[open] {
