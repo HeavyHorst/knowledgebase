@@ -47,7 +47,7 @@
          <div id="content">
          <template v-if="view == 'categories'" v-for="category in categories">
             <template v-if="category.category == ''">
-               <table class="mdl-data-table tablecard grow img_grow" :id="category.ID" v-on:click="fetchCategoryChilds">
+               <table class="mdl-data-table mdl-shadow--2dp tablecard grow img_grow" :id="category.ID" v-on:click="fetchCategoryChilds">
                   <tbody>
                      <tr>
                         <td class="mdl-data-table__cell--non-numeric">
@@ -65,7 +65,7 @@
             </template>
          </template>
          <template v-if="view == 'articles'" v-for="category in subCategories">
-            <table class="mdl-data-table tablecard demo-card-square grow img_grow" :id="category.ID" v-on:click="fetchCategoryChilds">
+            <table class="mdl-data-table mdl-shadow--2dp tablecard demo-card-square grow img_grow" :id="category.ID" v-on:click="fetchCategoryChilds">
                <tbody>
                   <tr>
                      <td class="mdl-data-table__cell--non-numeric">
