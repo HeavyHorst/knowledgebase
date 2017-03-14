@@ -13,6 +13,15 @@ Vue.component("login-dialog", {
     destroyed: function () {
         bus.$off('showLoginDialog', this.showLoginDialog);
     },
+    mounted: function () {
+        var that = this;
+        $(this.$refs.loginDialog.querySelectorAll("input")).on("keydown", function (e) {
+            // Enter pressed?
+            if (e.which == 10 || e.which == 13) {
+                that.authenticate();
+            }
+        });
+    },
     template: ' \
     <dialog class="mdl-dialog login-dialog" ref="loginDialog" style="width:400px !important"> \
     <h4 class="mdl-dialog__title">LOG IN</h4> \
@@ -30,7 +39,7 @@ Vue.component("login-dialog", {
       </form> \
     </div> \
     <div class="mdl-dialog__actions"> \
-      <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" v-on:click="authenticate">Login</button> \
+      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" v-on:click="authenticate">Login</button> \
     </div> \
   </dialog> \
     ',

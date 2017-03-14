@@ -12,6 +12,7 @@ const app = new Vue({
 
         artLimit: 10,
         artOffset: 0,
+        artPaginate: true,
 
         category: { id: "" },
         article: { id: "" },
@@ -202,6 +203,7 @@ const app = new Vue({
         },
         fetchArticlesForCategory: function (event) {
             var that = this;
+            that.artPaginate = false;
             var id = $(event.target).parents(".mdl-list__item").attr('id');
             this.fetchArticles('/api/articles/category/' + id, function () {
                 //that.activeCategory = id;
@@ -210,6 +212,7 @@ const app = new Vue({
         },
         fetchAllArticles: function () {
             var that = this;
+            that.artPaginate = true;
             this.fetchArticles('/api/articles', function () {
                 //that.activeCategory = "";
                 that.category = { id: "" }

@@ -171,6 +171,7 @@
                               </td>
                            </tr>
                         </template>
+                          <template v-if="artPaginate">
                            <tr>
                                <td></td>
                                <td></td>
@@ -182,6 +183,7 @@
                                    <i class="material-icons" style="font-size: 30px; cursor: pointer;" v-on:click="incArtOffset">keyboard_arrow_right</i>
                                </td>
                            </tr>
+                          </template>
                      </tbody>
                   </table>
                </template>
