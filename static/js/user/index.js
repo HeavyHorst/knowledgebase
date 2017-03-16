@@ -148,13 +148,18 @@ $(document).ready(function () {
                     id = $(event.target).closest("table").attr("id");
                 }
 
-                $.getJSON('/api/categories/category/' + id, function (json) {
-                    that.subCategories = json;
-                });
-
-                $.getJSON('/api/articles/category/' + id, function (json) {
-                    that.articles = json;
-                    that.view = "articles"
+                var categories, articles
+                $.when(
+                    $.getJSON('/api/categories/category/' + id, function (json) {
+                        categories = json;
+                    }),
+                    $.getJSON('/api/articles/category/' + id, function (json) {
+                        articles = json;
+                    })
+                ).then(function () {
+                    that.subCategories = categories;
+                    that.articles = articles;
+                    that.view = "articles";
                 });
 
                 this.url_path = "/articles/category/" + id;
