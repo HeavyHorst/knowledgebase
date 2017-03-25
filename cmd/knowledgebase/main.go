@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/HeavyHorst/sunoKB/pkg/auth"
-	"github.com/HeavyHorst/sunoKB/pkg/log"
-	"github.com/HeavyHorst/sunoKB/pkg/storage"
+	"github.com/HeavyHorst/knowledgebase/pkg/auth"
+	"github.com/HeavyHorst/knowledgebase/pkg/log"
+	"github.com/HeavyHorst/knowledgebase/pkg/storage"
 	"github.com/Sirupsen/logrus"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/pressly/chi"

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/HeavyHorst/sunoKB/pkg/auth"
-	"github.com/HeavyHorst/sunoKB/pkg/models"
+	"github.com/HeavyHorst/knowledgebase/pkg/auth"
+	"github.com/HeavyHorst/knowledgebase/pkg/models"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
 	"github.com/pressly/chi"

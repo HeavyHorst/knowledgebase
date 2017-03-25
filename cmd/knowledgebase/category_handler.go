@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/HeavyHorst/sunoKB/pkg/models"
-	"github.com/HeavyHorst/sunoKB/pkg/ulid"
+	"github.com/HeavyHorst/knowledgebase/pkg/models"
+	"github.com/HeavyHorst/knowledgebase/pkg/ulid"
 	"github.com/pressly/chi"
 )
 

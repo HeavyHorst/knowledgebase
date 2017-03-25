@@ -4,7 +4,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/HeavyHorst/sunoKB/pkg/models"
+	"github.com/HeavyHorst/knowledgebase/pkg/models"
 	"github.com/pkg/errors"
 	"github.com/timshannon/bolthold"
 	"golang.org/x/crypto/bcrypt"

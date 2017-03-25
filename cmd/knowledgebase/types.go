@@ -3,7 +3,7 @@ package main
 import (
 	"io"
 
-	"github.com/HeavyHorst/sunoKB/pkg/models"
+	"github.com/HeavyHorst/knowledgebase/pkg/models"
 )
 
 type contextKey string

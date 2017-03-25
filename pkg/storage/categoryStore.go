@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/HeavyHorst/sunoKB/pkg/models"
+	"github.com/HeavyHorst/knowledgebase/pkg/models"
 	"github.com/blevesearch/bleve"
 	"github.com/pkg/errors"
 	"github.com/timshannon/bolthold"

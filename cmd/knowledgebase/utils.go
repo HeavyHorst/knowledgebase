@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/HeavyHorst/sunoKB/pkg/log"
+	"github.com/HeavyHorst/knowledgebase/pkg/log"
 )
 
 func logAndHTTPError(w http.ResponseWriter, r *http.Request, code int, httptext string, err error) {

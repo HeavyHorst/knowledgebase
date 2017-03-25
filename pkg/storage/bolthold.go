@@ -5,7 +5,7 @@ import (
 
 	msgpack "gopkg.in/vmihailenco/msgpack.v2"
 
-	"github.com/HeavyHorst/sunoKB/pkg/models"
+	"github.com/HeavyHorst/knowledgebase/pkg/models"
 	"github.com/boltdb/bolt"
 	"github.com/pkg/errors"
 	"github.com/timshannon/bolthold"
