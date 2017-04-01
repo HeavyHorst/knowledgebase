@@ -1,7 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Quicksand');
 
 body, html {
-    font-family: 'Quicksand', sans-serif !important;
     -webkit-font-smoothing: antialiased;
     background: #ebeef1;
 }
@@ -40,7 +38,6 @@ img.wp-smiley, img.emoji {
 }
 
 blockquote {
-    font-family: 'Quicksand', sans-serif !important;
     font-size: 19px !important;
 }
 
@@ -249,7 +246,6 @@ a:-webkit-any-link {
     margin: -5px 0 2px;
     font-size: 20px;
     font-weight: bold;
-    font-family: 'Quicksand', sans-serif !important;
 }
 
 .mdl-data-table__cell--non-numeric.titel > .card_heading {
@@ -283,7 +279,6 @@ a:-webkit-any-link {
     color: black;
     font-size: 16px !important;
     letter-spacing: .004em;
-    font-family: 'Quicksand', sans-serif !important;
 }
 
 .demo-card-square > .mdl-card__supporting-text {
@@ -291,7 +286,6 @@ a:-webkit-any-link {
 }
 
 .adminContent .mdl-list__item {
-    font-family: 'Quicksand', sans-serif !important;
     letter-spacing: inherit;
     padding: 0px 0px 0px 16px;
     min-height: 32px;
@@ -336,7 +330,6 @@ a {
 .demo-card-square > .mdl-card__title > h2 {
     font-size: 20px;
     font-weight: bold;
-    font-family: 'Quicksand', sans-serif !important;
 }
 
 /* admin dashboard */
