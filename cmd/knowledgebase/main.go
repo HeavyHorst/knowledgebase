@@ -79,43 +79,46 @@ func main() {
 		})
 
 		r.Route("/users", func(r chi.Router) {
-			r.With(rta).Get("/", listUsers(store))
-			r.With(rta, requireAdmin).Post("/", createUser(store))
+			r.Use(rta)
+			r.Get("/", listUsers(store))
+			r.With(requireAdmin).Post("/", createUser(store))
 			r.Route("/:username", func(r chi.Router) {
 				r.Use(userCtx(store))
-				r.With(rta).Get("/", getUser)
-				r.With(rta, requireAdmin).Put("/", updateUser(store))
-				r.With(rta, requireAdmin).Delete("/", deleteUser(store))
+				r.Get("/", getUser)
+				r.With(requireAdmin).Put("/", updateUser(store))
+				r.With(requireAdmin).Delete("/", deleteUser(store))
 			})
 		})
 
 		r.Route("/categories", func(r chi.Router) {
+			r.Use(rta)
 			r.Get("/", listCategories(store))
-			r.With(rta).Post("/", createCategory(store))
+			r.Post("/", createCategory(store))
 			r.Get("/search", searchCategories(store))
 			r.Get("/category/:categoryID", listCategoriesForCategory(store))
 			r.Route("/:categoryID", func(r chi.Router) {
 				r.Use(categoryCtx(store))
 				r.Get("/", getCategory)
-				r.With(rta).Put("/", updateCategory(store))
-				r.With(rta).Delete("/", deleteCategory(store))
+				r.Put("/", updateCategory(store))
+				r.Delete("/", deleteCategory(store))
 			})
 		})
 
 		r.Route("/articles", func(r chi.Router) {
+			r.Use(rta)
 			r.Get("/", listArticles(store))
-			r.With(rta).Post("/", createArticle(store))
+			r.Post("/", createArticle(store))
 			r.Get("/search", searchArticles(store))
 			r.Get("/category/:categoryID", listArticlesForCategory(store))
 			r.Route("/:articleID", func(r chi.Router) {
 				r.Use(articleCtx(store))
 				r.Get("/", getArticle)
 				r.Get("/history", getArticleHistory(store))
-				r.With(rta).Put("/", updateArticle(store))
-				r.With(rta).Delete("/", deleteArticle(store))
+				r.Put("/", updateArticle(store))
+				r.Delete("/", deleteArticle(store))
 			})
 		})
 	})
 
-	http.ListenAndServe(":3000", r)
+	http.ListenAndServe("127.0.0.1:3000", r)
 }

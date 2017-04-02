@@ -144,33 +144,38 @@ const app = new Vue({
             var that = this;
             var obj = {};
             var list = [];
-            $.getJSON("/api/categories", function (json) {
-                if (json) {
-                    for (var i = 0; i < json.length; i++) {
-                        var key = json[i].category;
-                        if (!obj[key]) {
-                            obj[key] = [];
+            $.ajax({
+                url: "/api/categories",
+                type: "GET",
+                headers: { "Authorization": "Bearer " + that.token },
+                success: function (json) {
+                    if (json) {
+                        for (var i = 0; i < json.length; i++) {
+                            var key = json[i].category;
+                            if (!obj[key]) {
+                                obj[key] = [];
+                            }
+                            obj[key].push(json[i]);
                         }
-                        obj[key].push(json[i]);
-                    }
 
-                    var add = function (ob, depth) {
-                        for (var i = 0; i < ob.length; i++) {
-                            var elem = ob[i];
-                            elem.margin = depth * 50;
-                            list.push(elem);
-                            if (obj[elem.ID]) {
-                                add(obj[elem.ID], depth + 1);
+                        var add = function (ob, depth) {
+                            for (var i = 0; i < ob.length; i++) {
+                                var elem = ob[i];
+                                elem.margin = depth * 50;
+                                list.push(elem);
+                                if (obj[elem.ID]) {
+                                    add(obj[elem.ID], depth + 1);
+                                }
                             }
                         }
-                    }
-                    add(obj[''], 0);
+                        add(obj[''], 0);
 
-                    that.categories = list;
-                } else {
-                    that.categories = [];
+                        that.categories = list;
+                    } else {
+                        that.categories = [];
+                    }
+                    that.setCategoryView();
                 }
-                that.setCategoryView();
             });
         },
         updateArticles: function (id) {
@@ -180,24 +185,35 @@ const app = new Vue({
                 that.articles = [];
             }
 
-            $.getJSON('/api/articles/' + id, function (json) {
-                for (var i = 0; i < that.articles.length; i++) {
-                    if (that.articles[i].ID == id) {
-                        that.articles.splice(i, 1, json);
-                        return;
+            $.ajax({
+                url: '/api/articles/' + id,
+                type: "GET",
+                headers: { "Authorization": "Bearer " + that.token },
+                success: function (json) {
+                    for (var i = 0; i < that.articles.length; i++) {
+                        if (that.articles[i].ID == id) {
+                            that.articles.splice(i, 1, json);
+                            return;
+                        }
                     }
+                    that.articles.push(json);
                 }
-                that.articles.push(json);
             });
         },
         fetchArticles: function (url, callback) {
             var that = this;
-            $.getJSON(url, { offset: that.artOffset, limit: that.artLimit }, function (json) {
-                that.articles = json;
-                that.setArticleView();
+            $.ajax({
+                url: url,
+                type: "GET",
+                headers: { "Authorization": "Bearer " + that.token },
+                data: { offset: that.artOffset, limit: that.artLimit },
+                success: function (json) {
+                    that.articles = json;
+                    that.setArticleView();
 
-                if (callback) {
-                    callback();
+                    if (callback) {
+                        callback();
+                    }
                 }
             });
         },
@@ -232,16 +248,28 @@ const app = new Vue({
         },
         searchCategories: function (query) {
             var that = this;
-            $.getJSON("/api/categories/search", { q: query }, function (json) {
-                that.categories = json;
-                that.setCategoryView();
+            $.ajax({
+                url: "/api/categories/search",
+                type: "GET",
+                headers: { "Authorization": "Bearer " + that.token },
+                data: { q: query },
+                success: function (json) {
+                    that.categories = json;
+                    that.setCategoryView();
+                }
             })
         },
         searchArticles: function (query) {
             var that = this;
-            $.getJSON("/api/articles/search", { q: query }, function (json) {
-                that.articles = json;
-                that.setArticleView();
+            $.ajax({
+                url: "/api/articles/search",
+                type: "GET",
+                headers: { "Authorization": "Bearer " + that.token },
+                data: { q: query },
+                success: function (json) {
+                    that.articles = json;
+                    that.setArticleView();
+                }
             })
         },
         openUserDialog: function (id, method) {

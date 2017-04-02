@@ -30,6 +30,8 @@ $(document).ready(function () {
             }
         },
         created: function () {
+            this.token = localStorage.getItem("token");
+
             window.onpopstate = (event) => {
                 if (event.state === null) {
                     if (window.location.hash) {
@@ -131,9 +133,14 @@ $(document).ready(function () {
             },
             fetchAllCategories: function () {
                 var that = this;
-                $.getJSON("/api/categories", function (json) {
-                    that.categories = json;
-                    that.view = "categories";
+                $.ajax({
+                    url: "/api/categories",
+                    type: "GET",
+                    headers: { "Authorization": "Bearer " + that.token },
+                    success: function (json) {
+                        that.categories = json;
+                        that.view = "categories";
+                    }
                 });
 
                 this.url_path = "/categories";
@@ -150,11 +157,21 @@ $(document).ready(function () {
 
                 var categories, articles
                 $.when(
-                    $.getJSON('/api/categories/category/' + id, function (json) {
-                        categories = json;
+                    $.ajax({
+                        url: '/api/categories/category/' + id,
+                        type: "GET",
+                        headers: { "Authorization": "Bearer " + that.token },
+                        success: function (json) {
+                            categories = json;
+                        }
                     }),
-                    $.getJSON('/api/articles/category/' + id, function (json) {
-                        articles = json;
+                    $.ajax({
+                        url: '/api/articles/category/' + id,
+                        type: "GET",
+                        headers: { "Authorization": "Bearer " + that.token },
+                        success: function (json) {
+                            articles = json;
+                        }
                     })
                 ).then(function () {
                     that.subCategories = categories;
@@ -174,46 +191,57 @@ $(document).ready(function () {
                     id = $(event.target).closest(".demo-card-square").attr("id");
                 }
 
-                $.getJSON('/api/articles/' + id, function (json) {
-                    var converter = new showdown.Converter();
-                    converter.setFlavor('github');
-                    that.article = converter.makeHtml("# " + json.title + "\n\n" + json.article);
+                $.ajax({
+                    url: '/api/articles/' + id,
+                    type: "GET",
+                    headers: { "Authorization": "Bearer " + that.token },
+                    success: function (json) {
+                        var converter = new showdown.Converter();
+                        converter.setFlavor('github');
+                        that.article = converter.makeHtml("# " + json.title + "\n\n" + json.article);
 
-                    that.view = "article";
+                        that.view = "article";
 
-                    // generate toc and scroll to anker element
-                    that.$nextTick(function () {
-                        $('h1,h2,h3,h4').each(function (i, val) {
-                            if (!val.id) {
-                                val.id = val.innerText.replace(/\s/g, '').toLowerCase();
+                        // generate toc and scroll to anker element
+                        that.$nextTick(function () {
+                            $('h1,h2,h3,h4').each(function (i, val) {
+                                if (!val.id) {
+                                    val.id = val.innerText.replace(/\s/g, '').toLowerCase();
+                                }
+                                val.innerHTML = '<a href="#' + val.id + '">' + val.innerText + '</a>';
+                            });
+
+                            $('pre code').each(function (i, block) {
+                                hljs.highlightBlock(block);
+                            });
+
+                            if (window.location.hash) {
+                                document.querySelector(window.location.hash).scrollIntoView();
                             }
-                            val.innerHTML = '<a href="#' + val.id + '">' + val.innerText + '</a>';
-                        });
-
-                        $('pre code').each(function (i, block) {
-                            hljs.highlightBlock(block);
-                        });
-
-                        if (window.location.hash) {
-                            document.querySelector(window.location.hash).scrollIntoView();
-                        }
-                    })
+                        })
+                    }
                 });
 
                 this.url_path = "/articles/" + id + window.location.hash;
             },
             searchArticles: function (query) {
                 that = this;
-                $.getJSON('/api/articles/search', { q: query }, function (json) {
+                $.ajax({
+                    url: '/api/articles/search',
+                    type: "GET",
+                    headers: { "Authorization": "Bearer " + that.token },
+                    data: { q: query },
+                    success: function (json) {
 
-                    if (json.length === 1) {
-                        that.showArticle(json[0].ID);
-                        return
+                        if (json.length === 1) {
+                            that.showArticle(json[0].ID);
+                            return
+                        }
+
+                        that.subCategories = [];
+                        that.articles = json;
+                        that.view = "articles";
                     }
-
-                    that.subCategories = [];
-                    that.articles = json;
-                    that.view = "articles";
                 });
 
                 this.url_path = "/articles/search?" + $.param({ q: query });
