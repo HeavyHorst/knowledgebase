@@ -59,11 +59,17 @@ Vue.component("category-dialog", {
     ',
     methods: {
         getCategories: function (callback) {
-            $.getJSON("/api/categories", (json) => {
-                this.categories = json;
+            var that = this;
+            $.ajax({
+                url: "/api/categories",
+                type: "GET",
+                headers: { "Authorization": "Bearer " + that.token },
+                success: function (json) {
+                    that.categories = json;
 
-                if (callback) {
-                    callback();
+                    if (callback) {
+                        callback();
+                    }
                 }
             })
         },
@@ -77,12 +83,16 @@ Vue.component("category-dialog", {
         getCategory: function () {
             var that = this;
             if (this.cid) {
-                $.getJSON("/api/categories/" + this.cid, function (cat) {
+                $.ajax({
+                    url: "/api/categories/" + that.cid,
+                        type: "GET",
+                        headers: { "Authorization": "Bearer " + that.token },
+                    success: function (cat) {
                     that.getCategories(function () {
                         that.category = cat;
                         that.setDescription(cat.description);
                     });
-                })
+                }})
             } else {
                 that.getCategories(function () {
                     that.category = { category: "" };

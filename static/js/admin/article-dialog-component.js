@@ -61,11 +61,17 @@ Vue.component("article-dialog", {
     ',
     methods: {
         getCategories: function (callback) {
-            $.getJSON("/api/categories", (json) => {
-                this.categories = json;
+            var that = this;
+            $.ajax({
+                url: "/api/categories",
+                type: "GET",
+                headers: { "Authorization": "Bearer " + that.token },
+                success: function (json) {
+                    that.categories = json;
 
-                if (callback) {
-                    callback();
+                    if (callback) {
+                        callback();
+                    }
                 }
             })
         },
@@ -79,18 +85,23 @@ Vue.component("article-dialog", {
         getArticle: function (category) {
             if (this.aid) {
                 var that = this;
-                $.getJSON("/api/articles/" + this.aid, function (art) {
-                    if (!art.tags) {
-                        art.tags = [];
+                $.ajax({
+                    url: "/api/articles/" + that.aid,
+                    type: "GET",
+                    headers: { "Authorization": "Bearer " + that.token },
+                    success: function (art) {
+                        if (!art.tags) {
+                            art.tags = [];
+                        }
+
+                        that.getCategories(function () {
+                            $(that.$refs.dialog_article_tags).importTags(art.tags.join());
+                            $(that.$refs.dialog_article_tags).tagsInput({ width: "100%" });
+
+                            that.article = art;
+                            that.setArticleText(art.article);
+                        });
                     }
-
-                    that.getCategories(function () {
-                        $(that.$refs.dialog_article_tags).importTags(art.tags.join());
-                        $(that.$refs.dialog_article_tags).tagsInput({ width: "100%" });
-
-                        that.article = art;
-                        that.setArticleText(art.article);
-                    });
                 })
             } else {
                 var that = this;
@@ -128,7 +139,7 @@ Vue.component("article-dialog", {
                 headers: { "Authorization": "Bearer " + that.token },
                 data: JSON.stringify(that.article),
                 contentType: "application/json; charset=utf-8",
-                success: function(data, status, xhr) {
+                success: function (data, status, xhr) {
                     var location = xhr.getResponseHeader('Location');
                     var id = that.article.ID;
                     if (location) {
