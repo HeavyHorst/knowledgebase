@@ -38,7 +38,7 @@ func main() {
 
 	tokenGenerator := &auth.JWTTokenGenerator{
 		Method: jwt.SigningMethodHS256,
-		Exp:    time.Now().Add(time.Hour * 12).Unix(),
+		Exp:    time.Hour * 24,
 		Secret: []byte(jwtSecret),
 	}
 

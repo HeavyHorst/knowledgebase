@@ -15,13 +15,13 @@ type TokenGenerator interface {
 type JWTTokenGenerator struct {
 	Method jwt.SigningMethod
 	Secret []byte
-	Exp    int64
+	Exp    time.Duration
 }
 
 func (j *JWTTokenGenerator) GenerateToken(username, password string, admin bool) (string, error) {
 	token := jwt.New(j.Method)
 	claims := token.Claims.(jwt.MapClaims)
-	claims["exp"] = j.Exp
+	claims["exp"] = time.Now().Add(j.Exp).Unix()
 	claims["iat"] = time.Now().Unix()
 	claims["sub"] = username
 	claims["isAdmin"] = admin
