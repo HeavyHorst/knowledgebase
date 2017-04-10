@@ -113,11 +113,7 @@ func authenticate(store Authenticator, tokenGenerator auth.TokenGenerator) func(
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if err = json.NewEncoder(w).Encode(map[string]string{"token": token}); err != nil {
-			logAndHTTPError(w, r, 500, err.Error(), err)
-			return
-		}
+		writeJSON(w, r, map[string]string{"token": token})
 	}
 }
 
@@ -136,11 +132,7 @@ func refreshToken(store auth.TokenGenerator) func(w http.ResponseWriter, r *http
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if err = json.NewEncoder(w).Encode(map[string]string{"token": token}); err != nil {
-			logAndHTTPError(w, r, 500, err.Error(), err)
-			return
-		}
+		writeJSON(w, r, map[string]string{"token": token})
 	}
 }
 
@@ -152,11 +144,7 @@ func listUsers(store UserLister) func(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if err = json.NewEncoder(w).Encode(result); err != nil {
-			logAndHTTPError(w, r, 500, err.Error(), err)
-			return
-		}
+		writeJSON(w, r, result)
 	}
 }
 
@@ -168,11 +156,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	if err := json.NewEncoder(w).Encode(user); err != nil {
-		logAndHTTPError(w, r, 500, err.Error(), err)
-		return
-	}
+	writeJSON(w, r, user)
 }
 
 func createUser(store UserCreator) func(w http.ResponseWriter, r *http.Request) {
@@ -244,10 +228,6 @@ func deleteUser(store UserDeleter) func(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if err = json.NewEncoder(w).Encode(user); err != nil {
-			logAndHTTPError(w, r, 500, err.Error(), err)
-			return
-		}
+		writeJSON(w, r, user)
 	}
 }

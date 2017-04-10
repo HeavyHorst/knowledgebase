@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/HeavyHorst/knowledgebase/pkg/log"
@@ -10,4 +11,11 @@ func logAndHTTPError(w http.ResponseWriter, r *http.Request, code int, httptext 
 	logger := log.GetLogEntry(r)
 	logger.Error(err)
 	http.Error(w, httptext, code)
+}
+
+func writeJSON(w http.ResponseWriter, r *http.Request, value interface{}) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	if err := json.NewEncoder(w).Encode(value); err != nil {
+		logAndHTTPError(w, r, 500, err.Error(), err)
+	}
 }

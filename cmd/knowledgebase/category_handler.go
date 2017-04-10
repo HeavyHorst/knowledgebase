@@ -37,11 +37,7 @@ func listCategories(store CategoryLister) func(w http.ResponseWriter, r *http.Re
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if err = json.NewEncoder(w).Encode(result); err != nil {
-			logAndHTTPError(w, r, 500, err.Error(), err)
-			return
-		}
+		writeJSON(w, r, result)
 	}
 }
 
@@ -60,11 +56,7 @@ func searchCategories(store CategorySearcher) func(w http.ResponseWriter, r *htt
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if err = json.NewEncoder(w).Encode(categories); err != nil {
-			logAndHTTPError(w, r, 500, err.Error(), err)
-			return
-		}
+		writeJSON(w, r, categories)
 	}
 }
 
@@ -76,11 +68,7 @@ func listCategoriesForCategory(store CategoryLister) func(w http.ResponseWriter,
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if err = json.NewEncoder(w).Encode(result); err != nil {
-			logAndHTTPError(w, r, 500, err.Error(), err)
-			return
-		}
+		writeJSON(w, r, result)
 	}
 }
 
@@ -92,11 +80,7 @@ func getCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	if err := json.NewEncoder(w).Encode(cat); err != nil {
-		logAndHTTPError(w, r, 500, err.Error(), err)
-		return
-	}
+	writeJSON(w, r, cat)
 }
 
 func createCategory(store CategoryCreator) func(w http.ResponseWriter, r *http.Request) {
@@ -165,10 +149,6 @@ func deleteCategory(store CategoryDeleter) func(w http.ResponseWriter, r *http.R
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if err = json.NewEncoder(w).Encode(cat); err != nil {
-			logAndHTTPError(w, r, 500, err.Error(), err)
-			return
-		}
+		writeJSON(w, r, cat)
 	}
 }

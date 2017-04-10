@@ -63,11 +63,7 @@ func listArticles(store ArticleLister) func(w http.ResponseWriter, r *http.Reque
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if err = json.NewEncoder(w).Encode(result); err != nil {
-			logAndHTTPError(w, r, 500, err.Error(), err)
-			return
-		}
+		writeJSON(w, r, result)
 	}
 }
 
@@ -117,11 +113,7 @@ func searchArticles(store ArticleSearcher) func(w http.ResponseWriter, r *http.R
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if err = json.NewEncoder(w).Encode(articles); err != nil {
-			logAndHTTPError(w, r, 500, err.Error(), err)
-			return
-		}
+		writeJSON(w, r, articles)
 	}
 }
 
@@ -133,11 +125,7 @@ func listArticlesForCategory(store ArticleLister) func(w http.ResponseWriter, r 
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if err = json.NewEncoder(w).Encode(result); err != nil {
-			logAndHTTPError(w, r, 500, err.Error(), err)
-			return
-		}
+		writeJSON(w, r, result)
 	}
 }
 
@@ -149,11 +137,7 @@ func getArticleHistory(store ArticleHistoryGetter) func(w http.ResponseWriter, r
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if err = json.NewEncoder(w).Encode(result); err != nil {
-			logAndHTTPError(w, r, 500, err.Error(), err)
-			return
-		}
+		writeJSON(w, r, result)
 	}
 }
 
@@ -165,11 +149,7 @@ func getArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	if err := json.NewEncoder(w).Encode(art); err != nil {
-		logAndHTTPError(w, r, 500, err.Error(), err)
-		return
-	}
+	writeJSON(w, r, art)
 }
 
 func updateArticle(store ArticleUpdater) func(w http.ResponseWriter, r *http.Request) {
@@ -222,10 +202,6 @@ func deleteArticle(store ArticleDeleter) func(w http.ResponseWriter, r *http.Req
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		if err = json.NewEncoder(w).Encode(art); err != nil {
-			logAndHTTPError(w, r, 500, err.Error(), err)
-			return
-		}
+		writeJSON(w, r, art)
 	}
 }
