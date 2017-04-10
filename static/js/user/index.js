@@ -117,7 +117,7 @@ $(document).ready(function () {
                 // a little hacky - wait for the css to load
                 var fakeListener = setInterval(function () {
                     console.log($(".mdl-layout__content").css("background"))
-                    if ($(".mdl-layout__content").css("background") === "rgb(37, 35, 35) none repeat scroll 0% 0% / auto padding-box border-box") {
+                    if ($(".mdl-layout__content").css("background") === "rgb(0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box") {
                         clearInterval(fakeListener)
                         bus.$emit('theme-loaded');
                     }
