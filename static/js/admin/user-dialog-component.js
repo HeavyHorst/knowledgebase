@@ -1,26 +1,26 @@
 Vue.component("user-dialog", {
-    props: ["username"],
-    data: function () {
-        return {
-            user: {
-                username: "",
-                first_name: "",
-                last_name: "",
-                is_admin: false,
-                password: "",
-                image: "",
-            },
-            token: "",
-            method: "POST",
-        }
-    },
-    created: function () {
-        bus.$on('showUserDialog', this.showUserDialog);
-    },
-    destroyed: function () {
-        bus.$off('showUserDialog', this.showUserDialog);
-    },
-    template: ' \
+  props: ["username"],
+  data: function() {
+    return {
+      user: {
+        username: "",
+        first_name: "",
+        last_name: "",
+        is_admin: false,
+        password: "",
+        image: ""
+      },
+      token: "",
+      method: "POST"
+    };
+  },
+  created: function() {
+    bus.$on("showUserDialog", this.showUserDialog);
+  },
+  destroyed: function() {
+    bus.$off("showUserDialog", this.showUserDialog);
+  },
+  template: ' \
     <dialog class="mdl-dialog animate" ref="userDialog" style="width:30% !important"> \
     <h4 class="mdl-dialog__title">Benutzer:</h4> \
     <hr> \
@@ -56,60 +56,60 @@ Vue.component("user-dialog", {
     </div> \
   </dialog> \
     ',
-    methods: {
-        getUser: function (callback) {
-            if (this.username) {
-                var that = this;
-                $.ajax({
-                    url: "/api/users/" + that.username,
-                    type: "GET",
-                    headers: { "Authorization": "Bearer " + that.token },
-                    success: function (data, status, xhr) {
-                        that.user = data;
-                        that.$refs.usernameInput.disabled = true;
-                    }
-                });
-            } else {
-                this.user = {};
-                this.$refs.usernameInput.disabled = false;
-            }
-        },
-        showUserDialog: function (token, method) {
-            this.token = token;
+  methods: {
+    getUser: function(callback) {
+      if (this.username) {
+        var that = this;
+        $.ajax({
+          url: "/api/users/" + that.username,
+          type: "GET",
+          headers: { Authorization: "Bearer " + that.token },
+          success: function(data, status, xhr) {
+            that.user = data;
+            that.$refs.usernameInput.disabled = true;
+          }
+        });
+      } else {
+        this.user = {};
+        this.$refs.usernameInput.disabled = false;
+      }
+    },
+    showUserDialog: function(token, method) {
+      this.token = token;
 
-            if (method) {
-                this.method = method;
-            }
+      if (method) {
+        this.method = method;
+      }
 
-            var dialog = this.$refs.userDialog;
-            this.getUser();
-            dialog.showModal();
-        },
-        updateUser: function () {
-            var that = this;
-            var dialog = this.$refs.userDialog;
+      var dialog = this.$refs.userDialog;
+      this.getUser();
+      dialog.showModal();
+    },
+    updateUser: function() {
+      var that = this;
+      var dialog = this.$refs.userDialog;
 
-            if (this.$refs.usernameInput.value.trim() === "") {
-                alert("Sie müssen einen Benutzernamen angeben!");
-                return;
-            }
+      if (this.$refs.usernameInput.value.trim() === "") {
+        alert("Sie müssen einen Benutzernamen angeben!");
+        return;
+      }
 
-            var url = "/api/users/" + this.user.username;
-            if (this.method === "POST") {
-                var url = '/api/users';
-            }
+      var url = "/api/users/" + this.user.username;
+      if (this.method === "POST") {
+        var url = "/api/users";
+      }
 
-            $.ajax({
-                url: url,
-                type: that.method,
-                headers: { "Authorization": "Bearer " + that.token },
-                data: JSON.stringify(that.user),
-                contentType: "application/json; charset=utf-8",
-                success: function () {
-                    bus.$emit('refresh-users');
-                    dialog.close();
-                }
-            });
-        },
+      $.ajax({
+        url: url,
+        type: that.method,
+        headers: { Authorization: "Bearer " + that.token },
+        data: JSON.stringify(that.user),
+        contentType: "application/json; charset=utf-8",
+        success: function() {
+          bus.$emit("refresh-users");
+          dialog.close();
+        }
+      });
     }
-})
+  }
+});
