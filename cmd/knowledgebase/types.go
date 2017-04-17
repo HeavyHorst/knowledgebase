@@ -54,6 +54,7 @@ type CategoryGetter interface {
 
 type CategoryLister interface {
 	ListCategories() ([]models.Category, error)
+	ListBaseCategories() ([]models.Category, error)
 	ListCategoriesForCategory(catID string) ([]models.Category, error)
 }
 

@@ -154,7 +154,7 @@ const app = new Vue({
       var obj = {};
       var list = [];
       $.ajax({
-        url: "/api/categories",
+        url: "/api/categories/base",
         type: "GET",
         headers: { Authorization: "Bearer " + that.token },
         success: function(json) {

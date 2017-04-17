@@ -56,6 +56,12 @@ func (b *CategoryStore) ListCategories() ([]models.Category, error) {
 	return result, errors.Wrap(err, "couldn't get category list")
 }
 
+func (b *CategoryStore) ListBaseCategories() ([]models.Category, error) {
+	var result []models.Category
+	err := b.store.Find(&result, bolthold.Where("Category").Eq(""))
+	return result, errors.Wrap(err, "couldn't get category list")
+}
+
 func (b *CategoryStore) ListCategoriesForCategory(catID string) ([]models.Category, error) {
 	var result []models.Category
 	err := b.store.Find(&result, bolthold.Where("Category").Eq(catID))

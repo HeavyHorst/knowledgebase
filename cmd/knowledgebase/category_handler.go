@@ -29,9 +29,18 @@ func categoryCtx(store CategoryGetter) func(next http.Handler) http.Handler {
 	}
 }
 
-func listCategories(store CategoryLister) func(w http.ResponseWriter, r *http.Request) {
+func listCategories(store CategoryLister, base bool) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		result, err := store.ListCategories()
+		var (
+			result []models.Category
+			err    error
+		)
+
+		if !base {
+			result, err = store.ListCategories()
+		} else {
+			result, err = store.ListBaseCategories()
+		}
 		if err != nil {
 			logAndHTTPError(w, r, 500, err.Error(), err)
 			return
