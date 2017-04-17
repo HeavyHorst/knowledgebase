@@ -149,42 +149,68 @@ const app = new Vue({
     setCategoryView: function() {
       this.view = "categories";
     },
+    fetchCategoriesForCategory: function(event) {
+      var that = this;
+      var id = $(event.target).parents(".mdl-list__item").attr("id");
+      var margin = Number($("#" + id).css("margin-left").replace("px", ""));
+      var index = 0;
+      for (var i = 0; i < this.categories.length; i++) {
+        if (this.categories[i].ID == id) {
+          index = i;
+        }
+      }
+
+      if (!$("#" + id).hasClass("is-expanded")) {
+        this.fetchCategories("/api/categories/category/" + id, function(json) {
+          if (json) {
+            var json = json.map(function(elem) {
+              elem.margin = margin + 50;
+              return elem;
+            });
+
+            that.categories.splice.apply(
+              that.categories,
+              [index + 1, 0].concat(json)
+            );
+          }
+        });
+      } else {
+        for (var i = index + 1; i < that.categories.length; i++) {
+          if (that.categories[i].margin > margin) {
+            that.categories.splice(i, 1);
+            i--;
+          } else {
+            break;
+          }
+        }
+      }
+      $("#" + id).toggleClass("is-expanded");
+    },
+    fetchCategories: function(url, callback) {
+      var that = this;
+      $.ajax({
+        url: url,
+        type: "GET",
+        headers: { Authorization: "Bearer " + that.token },
+        success: function(json) {
+          if (callback) {
+            callback(json);
+          }
+        }
+      });
+    },
     fetchAllCategories: function() {
       var that = this;
       var obj = {};
       var list = [];
-      $.ajax({
-        url: "/api/categories/base",
-        type: "GET",
-        headers: { Authorization: "Bearer " + that.token },
-        success: function(json) {
-          if (json) {
-            for (var i = 0; i < json.length; i++) {
-              var key = json[i].category;
-              if (!obj[key]) {
-                obj[key] = [];
-              }
-              obj[key].push(json[i]);
-            }
 
-            var add = function(ob, depth) {
-              for (var i = 0; i < ob.length; i++) {
-                var elem = ob[i];
-                elem.margin = depth * 50;
-                list.push(elem);
-                if (obj[elem.ID]) {
-                  add(obj[elem.ID], depth + 1);
-                }
-              }
-            };
-            add(obj[""], 0);
-
-            that.categories = list;
-          } else {
-            that.categories = [];
-          }
-          that.setCategoryView();
+      this.fetchCategories("/api/categories/base", function(json) {
+        if (json) {
+          that.categories = json;
+        } else {
+          that.categories = [];
         }
+        that.setCategoryView();
       });
     },
     updateArticles: function(id) {
@@ -194,19 +220,14 @@ const app = new Vue({
         that.articles = [];
       }
 
-      $.ajax({
-        url: "/api/articles/" + id,
-        type: "GET",
-        headers: { Authorization: "Bearer " + that.token },
-        success: function(json) {
-          for (var i = 0; i < that.articles.length; i++) {
-            if (that.articles[i].ID == id) {
-              that.articles.splice(i, 1, json);
-              return;
-            }
+      this.fetchArticles("/api/articles/" + id, function(json) {
+        for (var i = 0; i < that.articles.length; i++) {
+          if (that.articles[i].ID == id) {
+            that.articles.splice(i, 1, json);
+            return;
           }
-          that.articles.push(json);
         }
+        that.articles.push(json);
       });
     },
     fetchArticles: function(url, callback) {
@@ -217,11 +238,10 @@ const app = new Vue({
         headers: { Authorization: "Bearer " + that.token },
         data: { offset: that.artOffset, limit: that.artLimit },
         success: function(json) {
-          that.articles = json;
           that.setArticleView();
 
           if (callback) {
-            callback();
+            callback(json);
           }
         }
       });
@@ -230,16 +250,18 @@ const app = new Vue({
       var that = this;
       that.artPaginate = false;
       var id = $(event.target).parents(".mdl-list__item").attr("id");
-      this.fetchArticles("/api/articles/category/" + id, function() {
+      this.fetchArticles("/api/articles/category/" + id, function(json) {
         //that.activeCategory = id;
+        that.articles = json;
         that.category = { id: id };
       });
     },
     fetchAllArticles: function() {
       var that = this;
       that.artPaginate = true;
-      this.fetchArticles("/api/articles", function() {
+      this.fetchArticles("/api/articles", function(json) {
         //that.activeCategory = "";
+        that.articles = json;
         that.category = { id: "" };
       });
     },

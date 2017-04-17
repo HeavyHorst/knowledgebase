@@ -279,8 +279,10 @@ a:-webkit-any-link {
 
 .adminContent .mdl-list__item {
     letter-spacing: inherit;
-    padding: 0px 0px 0px 16px;
+    padding: 16px 0px 16px 16px;
     min-height: 32px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
 }
 
 .mdl-list__item-text-body {
@@ -643,4 +645,25 @@ form textarea {
 
 .avatar__image:nth-child(n+2) {
     margin-left: -8px;
+}
+
+.clist-item {
+  display: inline-block;
+  position: absolute;
+  margin-right: 10px;
+}
+.clist-enter-active, .clist-leave-active {
+  transition: all .5s;
+}
+
+.clist-leave-active {
+    position: absolute;
+}
+
+.clist-enter, .clist-leave-to /* .list-leave-active for <2.1.8 */ {
+  opacity: 0;
+}
+
+.clist-move {
+  transition: transform .5s;
 }

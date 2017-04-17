@@ -1,75 +1,76 @@
 <!doctype html>
 <html>
-   <meta charset="utf-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-   <link href="/static/css/material.indigo-pink.min.css" rel="stylesheet">
-   <script defer src="/static/js/mdllight.js"></script>
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-   <link rel="stylesheet" href="/static/css/font-awesome.min.css">
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-   <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.6.0/showdown.min.js"></script>
-   <script src="/static/js/admin/jquery.tagsinput.js"></script>
-   <link rel="stylesheet" href="/static/css/jquery.tagsinput.css" />
-   <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
-   <script src="/static/js/moment-with-locales.js"></script>
-   <script src="/static/js/jwt-decode.min.js"></script>
-   <script src="/static/js/admin/category-dialog-component.js"></script>
-   <script src="/static/js/admin/article-dialog-component.js"></script>
-   <script src="/static/js/admin/user-dialog-component.js"></script>
-   <script src="/static/js/admin/login-dialog-component.js"></script>
-   <link href="/static/css/style.css" rel="stylesheet">
-   <body style="visibility: hidden;">
-      <div id="site-content" class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
-         <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link href="/static/css/material.indigo-pink.min.css" rel="stylesheet">
+<script defer src="/static/js/mdllight.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="/static/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.6.0/showdown.min.js"></script>
+<script src="/static/js/admin/jquery.tagsinput.js"></script>
+<link rel="stylesheet" href="/static/css/jquery.tagsinput.css" />
+<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+<script src="/static/js/moment-with-locales.js"></script>
+<script src="/static/js/jwt-decode.min.js"></script>
+<script src="/static/js/admin/category-dialog-component.js"></script>
+<script src="/static/js/admin/article-dialog-component.js"></script>
+<script src="/static/js/admin/user-dialog-component.js"></script>
+<script src="/static/js/admin/login-dialog-component.js"></script>
+<link href="/static/css/style.css" rel="stylesheet">
+
+<body style="visibility: hidden;">
+    <div id="site-content" class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+        <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
             <div class="mdl-layout__header-row">
-               <div class="mdl-layout-spacer"></div>
-               <i class="material-icons" style="margin-right: 20px;">search</i>
-               <div class="mdl-textfield mdl-js-textfield" style="width: 80%;">
-                  <input class="mdl-textfield__input" type="text" name="search" id="mainsearch">
-                  <label class="mdl-textfield__label" for="mainsearch">Suchen</label>
-               </div>
-               <div class="mdl-layout-spacer"></div>
+                <div class="mdl-layout-spacer"></div>
+                <i class="material-icons" style="margin-right: 20px;">search</i>
+                <div class="mdl-textfield mdl-js-textfield" style="width: 80%;">
+                    <input class="mdl-textfield__input" type="text" name="search" id="mainsearch">
+                    <label class="mdl-textfield__label" for="mainsearch">Suchen</label>
+                </div>
+                <div class="mdl-layout-spacer"></div>
             </div>
-         </header>
-         <div class="demo-drawer mdl-layout__drawer mdl-color--grey-900 mdl-color-text--blue-grey-50">
+        </header>
+        <div class="demo-drawer mdl-layout__drawer mdl-color--grey-900 mdl-color-text--blue-grey-50">
             <div class="clean">
-               <img v-if="userProfile.image" :src="userProfile.image" class="demo-avatar f-left img-circle">
-               <img v-else src="/static/images/user-icon.svg" class="demo-avatar f-left img-circle">
-               <div class="f-left">
-                  <h4 class="mdl-color-text--white header-name">{{ userProfile.first_name + ' ' + userProfile.last_name }}</h4>
-                  <div class="mdl-color-text--blue-grey-400 f12"><i class=" material-icons f12">library_music</i> Master of the telecaster</div>
-               </div>
+                <img v-if="userProfile.image" :src="userProfile.image" class="demo-avatar f-left img-circle">
+                <img v-else src="/static/images/user-icon.svg" class="demo-avatar f-left img-circle">
+                <div class="f-left">
+                    <h4 class="mdl-color-text--white header-name">{{ userProfile.first_name + ' ' + userProfile.last_name }}</h4>
+                    <div class="mdl-color-text--blue-grey-400 f12"><i class=" material-icons f12">library_music</i> Master of the telecaster</div>
+                </div>
             </div>
             </header>
             <nav class="demo-navigation mdl-navigation mdl-color--grey-900">
-               <a class="mdl-navigation__link" v-on:click="fetchAllCategories"><i class="material-icons" role="presentation">folder</i>Kategorien</a>
-               <a class="mdl-navigation__link" v-on:click="fetchAllArticles"><i class="material-icons" role="presentation">edit</i>Artikel</a>
-               <a class="mdl-navigation__link" v-on:click="fetchAllUsers"><i class="material-icons" role="presentation">account_circle</i>Benutzer</a>
-               <a class="mdl-navigation__link" v-on:click="removeToken"><i class="material-icons" role="presentation">power_settings_new</i>logout</a>
+                <a class="mdl-navigation__link" v-on:click="fetchAllCategories"><i class="material-icons" role="presentation">folder</i>Kategorien</a>
+                <a class="mdl-navigation__link" v-on:click="fetchAllArticles"><i class="material-icons" role="presentation">edit</i>Artikel</a>
+                <a class="mdl-navigation__link" v-on:click="fetchAllUsers"><i class="material-icons" role="presentation">account_circle</i>Benutzer</a>
+                <a class="mdl-navigation__link" v-on:click="removeToken"><i class="material-icons" role="presentation">power_settings_new</i>logout</a>
             </nav>
-         </div>
-         <main class="mdl-layout__content mdl-color--white">
+        </div>
+        <main class="mdl-layout__content mdl-color--white">
             <div id="content" class="adminContent">
-               <category-dialog :cid="category.id"></category-dialog>
-               <article-dialog :aid="article.id"></article-dialog>
-               <user-dialog :username="user.username"></user-dialog>
-               <login-dialog></login-dialog>
-               <template v-if="view == 'categories'">
-                  <ul class="demo-list-three mdl-list">
-                     <template v-for="category in categories">
-                        <li class="mdl-list__item" :id=category.ID v-bind:style="{ overflow: 'visible', marginLeft: category.margin + 'px' }">
-				<div style="width: 100%; cursor:pointer;">
-                              <span class="mdl-list__item-primary-content" v-on:click="fetchArticlesForCategory">
+                <category-dialog :cid="category.id"></category-dialog>
+                <article-dialog :aid="article.id"></article-dialog>
+                <user-dialog :username="user.username"></user-dialog>
+                <login-dialog></login-dialog>
+                <template v-if="view == 'categories'">
+                        <transition-group name="clist" tag="ul" class="demo-list-three mdl-list">
+                        <template v-for="category in categories">
+                            <li class="mdl-list__item" :key="category.ID" :id="category.ID" v-bind:style="{ overflow: 'visible', marginLeft: category.margin + 'px' }">
+                                <div style="width: 100%; cursor:pointer;">
+                                    <span class="mdl-list__item-primary-content" v-on:click="fetchCategoriesForCategory">
                                  <div class="article__list_logo"><img :src="category.image"></div>
                                  <span class="titel" style="margin-right: 1em;">{{category.title}}</span>
-                                 <span class="mdl-list__item-text-body beschreibung">
+                                    <span class="mdl-list__item-text-body beschreibung">
 			         <span v-html='mdToHtml(category.description)'></span>
-                                 </span>
-                              </span>
-                           </div>
-                           <span class="mdl-list__item-secondary-content" style="position: relative;">
+                                    </span>
+                                    </span>
+                                </div>
+                                <span class="mdl-list__item-secondary-content" style="position: relative;">
                               <button :id="category.ID + '-menu'" class="mdl-button mdl-js-button mdl-button--icon">
                               <i class="material-icons">more_vert</i>
                               </button>
@@ -79,125 +80,119 @@
                                  <li class="mdl-menu__item" v-on:click="deleteCategory"> Löschen</li>
                               </ul>
                            </span>
-                        </li>
-                        <template v-if="category.fragments">
-                        <p style="margin-top: 10px;">
-                           <template v-for="(value, key) in category.fragments">
-                        <ul style="font-size: 11px;line-height: 20px;">
-                        <li><b>{{key}}:</b>
-                        <template v-for="frag in value">
-                        <tt v-html="frag"></tt>
+                            </li>
+                            <template v-if="category.fragments">
+                                <p style="margin-top: 10px;">
+                                    <template v-for="(value, key) in category.fragments">
+                                        <ul style="font-size: 11px;line-height: 20px;">
+                                            <li><b>{{key}}:</b>
+                                                <template v-for="frag in value">
+                                                    <tt v-html="frag"></tt>
+                                                </template>
+                                            </li>
+                                        </ul>
+                                    </template>
+                                </p>
+                            </template>
                         </template>
-                        </li>
-                        </ul>
-                        </template>
-                        </p>
-                        </template>
-                        <hr>
-                     </template>
-                  </ul>
-                  <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color--blue-grey-400 right_corner_fixed"
-                     v-on:click="newCategoryDialog">
+                        </transition-group>
+                    </ul>
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color--blue-grey-400 right_corner_fixed"
+                        v-on:click="newCategoryDialog">
                   <i class="material-icons">add</i>
                   </button>
-               </template>
-               <template v-if="view == 'articles'">
-                  <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="articles_table" style="min-width: 100%; width: 100%;">
-                     <thead>
-                        <tr>
-                           <th class="mdl-data-table__cell--non-numeric" data-sort="titel" style="min-width: 100px;">Titel</th>
-                           <th class="mdl-data-table__cell--non-numeric" style="width:30%;">Beschreibung</th>
-                           <th class="mdl-data-table__cell--non-numeric">Tags</th>
-                           <th class="mdl-data-table__cell--non-numeric" style="width: 175px;">Autoren</th>
-                           <th class="mdl-data-table__cell--non-numeric">zuletzt geändert</th>
-                           <th class="mdl-data-table__cell--non-numeric center" style="width:100px;">
-                              <button class="mdl-button mdl-js-button mdl-button--icon" v-on:click="newArticleDialog">
+                </template>
+                <template v-if="view == 'articles'">
+                    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="articles_table" style="min-width: 100%; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th class="mdl-data-table__cell--non-numeric" data-sort="titel" style="min-width: 100px;">Titel</th>
+                                <th class="mdl-data-table__cell--non-numeric" style="width:30%;">Beschreibung</th>
+                                <th class="mdl-data-table__cell--non-numeric">Tags</th>
+                                <th class="mdl-data-table__cell--non-numeric" style="width: 175px;">Autoren</th>
+                                <th class="mdl-data-table__cell--non-numeric">zuletzt geändert</th>
+                                <th class="mdl-data-table__cell--non-numeric center" style="width:100px;">
+                                    <button class="mdl-button mdl-js-button mdl-button--icon" v-on:click="newArticleDialog">
                               <i class="material-icons">add</i>
                               </button>
-                           </th>
-                        </tr>
-                     </thead>
-                     <tbody class="list">
-                        <template v-for="article in articles">
-                           <tr :id="article.ID">
-                              <td class="mdl-data-table__cell--non-numeric titel wrap">
-                                 <h2 class="card_heading">{{article.title}}</h2>
-                              </td>
-                              <td class="mdl-data-table__cell--non-numeric wrap beschreibung">
-                                 <template v-if="article.fragments">
-                                    <template v-if="article.fragments.article">
-                                       <span v-for="frag in article.fragments.article" v-html="frag"></span>
-                                    </template>
-		                    <span v-else v-html='mdToHtml(article.short)'></span>
-                                 </template>
-		                 <span v-else v-html='mdToHtml(article.short)'></span>
-                              </td>
-                              <td class="mdl-data-table__cell--non-numeric tags wrap">
-                                 <template v-for="tag in article.tags">
-                                    <span class="mdl-chip" style="margin: 4px;">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+                            <template v-for="article in articles">
+                                <tr :id="article.ID">
+                                    <td class="mdl-data-table__cell--non-numeric titel wrap">
+                                        <h2 class="card_heading">{{article.title}}</h2>
+                                    </td>
+                                    <td class="mdl-data-table__cell--non-numeric wrap beschreibung">
+                                        <template v-if="article.fragments">
+                                            <template v-if="article.fragments.article">
+                                                <span v-for="frag in article.fragments.article" v-html="frag"></span>
+                                            </template>
+                                            <span v-else v-html='mdToHtml(article.short)'></span>
+                                        </template>
+                                        <span v-else v-html='mdToHtml(article.short)'></span>
+                                    </td>
+                                    <td class="mdl-data-table__cell--non-numeric tags wrap">
+                                        <template v-for="tag in article.tags">
+                                            <span class="mdl-chip" style="margin: 4px;">
                                     <span class="mdl-chip__text">{{tag}}</span>
-                                    </span>
-                                 </template>
-                              </td>
+                                            </span>
+                                        </template>
+                                    </td>
 
 
-                              <td class="avatar__photo avatars__images o__ltr mdl-data-table__cell--non-numeric">
-                                 <template v-for="author in article.authors.slice().reverse()">
-                                    <img :src="author.image" class="avatar__image">
-                                 </template>
-                              </td>
+                                    <td class="avatar__photo avatars__images o__ltr mdl-data-table__cell--non-numeric">
+                                        <template v-for="author in article.authors.slice().reverse()">
+                                            <img :src="author.image" class="avatar__image">
+                                        </template>
+                                    </td>
 
 
 
-                              <td class="mdl-data-table__cell--non-numeric wrap">
-                                von {{ 
-                                    article.authors.slice().reverse().map(function(author){ 
-                                        return author.first_name + ' ' + author.last_name
-                                    }).filter(function (x, i, a) { 
-                                        return a.indexOf(x) == i; 
-                                    }).join(", ")
-                                 }}
-                                 <br>
-                                 {{ printTime(article.last_modified) }} aktualisiert
-                              </td>
-                              <td class="mdl-data-table__cell--non-numeric center" style="overflow:visible;">
-                                 <button :id="article.ID + '-menu'" class="mdl-button mdl-js-button mdl-button--icon">
+                                    <td class="mdl-data-table__cell--non-numeric wrap">
+                                        von {{ article.authors.slice().reverse().map(function(author){ return author.first_name + ' ' + author.last_name }).filter(function
+                                        (x, i, a) { return a.indexOf(x) == i; }).join(", ") }}
+                                        <br> {{ printTime(article.last_modified) }} aktualisiert
+                                    </td>
+                                    <td class="mdl-data-table__cell--non-numeric center" style="overflow:visible;">
+                                        <button :id="article.ID + '-menu'" class="mdl-button mdl-js-button mdl-button--icon">
                                  <i class="material-icons">more_vert</i>
                                  </button>
-                                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" :for="article.ID + '-menu'">
-                                    <li class="mdl-menu__item" v-on:click="changeArticleDialog"> Bearbeiten</li>
-                                    <li class="mdl-menu__item" v-on:click="deleteArticle"> Löschen</li>
-                                 </ul>
-                              </td>
-                           </tr>
-                        </template>
-                          <template v-if="artPaginate">
-                           <tr>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td class="mdl-data-table__cell--non-numeric center">
-                                   <i class="material-icons" style="font-size: 30px; cursor: pointer;" v-on:click="decArtOffset">keyboard_arrow_left</i>
-                                   <i class="material-icons" style="font-size: 30px; cursor: pointer;" v-on:click="incArtOffset">keyboard_arrow_right</i>
-                               </td>
-                           </tr>
-                          </template>
-                     </tbody>
-                  </table>
-               </template>
-               <template v-if="view == 'users'">
-                  <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="articles_table" style="min-width: 100%; width: 100%;">
-                     <thead>
-                        <tr>
-                           <th class="mdl-data-table__cell--non-numeric" style="width: 120px;"></th>
-                           <th class="mdl-data-table__cell--non-numeric">Benutzername</th>
-                           <th class="mdl-data-table__cell--non-numeric">Name</th>
-                           <th class="mdl-data-table__cell--non-numeric">Nachname</th>
-                           <th class="mdl-data-table__cell--non-numeric">Admin</th>
-                           <th class="mdl-data-table__cell--non-numeric" style="width: 5%;">
-                              <button class="mdl-button mdl-js-button mdl-button--icon" v-on:click="newUserDialog">
+                                        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" :for="article.ID + '-menu'">
+                                            <li class="mdl-menu__item" v-on:click="changeArticleDialog"> Bearbeiten</li>
+                                            <li class="mdl-menu__item" v-on:click="deleteArticle"> Löschen</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </template>
+                            <template v-if="artPaginate">
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="mdl-data-table__cell--non-numeric center">
+                                        <i class="material-icons" style="font-size: 30px; cursor: pointer;" v-on:click="decArtOffset">keyboard_arrow_left</i>
+                                        <i class="material-icons" style="font-size: 30px; cursor: pointer;" v-on:click="incArtOffset">keyboard_arrow_right</i>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template v-if="view == 'users'">
+                    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="articles_table" style="min-width: 100%; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th class="mdl-data-table__cell--non-numeric" style="width: 120px;"></th>
+                                <th class="mdl-data-table__cell--non-numeric">Benutzername</th>
+                                <th class="mdl-data-table__cell--non-numeric">Name</th>
+                                <th class="mdl-data-table__cell--non-numeric">Nachname</th>
+                                <th class="mdl-data-table__cell--non-numeric">Admin</th>
+                                <th class="mdl-data-table__cell--non-numeric" style="width: 5%;">
+                                    <button class="mdl-button mdl-js-button mdl-button--icon" v-on:click="newUserDialog">
                               <i class="material-icons">add</i>
                               </button>
                            </th>
