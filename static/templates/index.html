@@ -56,7 +56,7 @@
                         <td class="mdl-data-table__cell--non-numeric content_text">
                            <div class="mdl-card__supporting-text wrap">
                               <h2 class="card_heading">{{category.title}}</h2>
-                              {{category.description}}
+			      <span v-html='mdToHtml(category.description)'></span>
                            </div>
                         </td>
                      </tr>
@@ -74,7 +74,7 @@
                      <td class="mdl-data-table__cell--non-numeric content_text">
                         <div class="mdl-card__supporting-text wrap">
                            <h2 class="card_heading">{{category.title}}</h2>
-                           {{category.description}}
+			   <span v-html='mdToHtml(category.description)'></span>
                         </div>
                      </td>
                   </tr>

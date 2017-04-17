@@ -56,18 +56,6 @@ blockquote {
     transform: scale(1.30);
 }
 
-.black {
-    transition: all .1s ease-in-out;
-    cursor: pointer;
-}
-.black:hover {
-    margin-left: 20px;
-}
-.black:hover .mdl-list__item-text-body {
-    transition: all .1s ease-in-out;
-    color: black !important;
-}
-
 a:-webkit-any-link {
     text-decoration: none !important;
 }
@@ -266,6 +254,10 @@ a:-webkit-any-link {
     max-width: 80%;
 }
 
+.mdl-card__supporting-text p {
+	line-height: 18px !important;
+}
+
 .card-tags {
     color: rgba(0, 0, 0, .54);
     font-size: 1rem;
@@ -292,7 +284,14 @@ a:-webkit-any-link {
 }
 
 .mdl-list__item-text-body {
+    transition: all .5s linear !important;
+    max-height: 65px;
+    overflow: hidden;
     font-size: 15px !important;
+}
+
+.mdl-list__item-text-body:hover {
+    max-height: 500px;
 }
 
 .wrap {

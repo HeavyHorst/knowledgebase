@@ -22,15 +22,20 @@ $(document).ready(function() {
         article: "",
         url_path: "/categories",
         theme: "",
+        mdconverter: new showdown.Converter(),
         printTime: function(item) {
           var t = moment(item);
           t.locale("de");
           return t.fromNow();
+        },
+        mdToHtml: function(text) {
+          return this.mdconverter.makeHtml(text);
         }
       };
     },
     created: function() {
       this.token = localStorage.getItem("token");
+      this.mdconverter.setFlavor("github");
 
       window.onpopstate = event => {
         if (event.state === null) {
@@ -209,9 +214,7 @@ $(document).ready(function() {
           type: "GET",
           headers: { Authorization: "Bearer " + that.token },
           success: function(json) {
-            var converter = new showdown.Converter();
-            converter.setFlavor("github");
-            that.article = converter.makeHtml(
+            that.article = that.mdconverter.makeHtml(
               "# " + json.title + "\n\n" + json.article
             );
 

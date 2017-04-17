@@ -20,10 +20,14 @@ const app = new Vue({
 
     view: "categories",
 
+    mdconverter: new showdown.Converter(),
     printTime: function(item) {
       var t = moment(item);
       t.locale("de");
       return t.fromNow();
+    },
+    mdToHtml: function(text) {
+      return this.mdconverter.makeHtml(text);
     }
   },
   created: function() {
