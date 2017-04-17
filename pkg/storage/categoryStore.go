@@ -11,6 +11,7 @@ import (
 )
 
 var categoryIndex bleve.Index
+var ErrSameCategory = errors.New("a category can not be assigned to itself")
 
 func init() {
 	var err error
@@ -71,6 +72,10 @@ func (b *CategoryStore) upsertCategory(cat models.Category, typ insertType) erro
 	}
 
 	cat.LastModified = time.Now()
+
+	if cat.ID == cat.Category {
+		return ErrSameCategory
+	}
 
 	switch typ {
 	case insertTypeCreate:

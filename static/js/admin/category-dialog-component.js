@@ -34,14 +34,14 @@ Vue.component("category-dialog", {
     <hr> \
     <div class="mdl-dialog__content"> \
       <form action=""> \
-        <input v-model="category.id" type="hidden" name="ID"> \
+        <input v-model="category.ID" type="hidden" name="ID"> \
         <div class="cf half left"> \
           <input v-model="category.title" type="text" placeholder="Titel"> \
         </div> \
         <div class="mdl-selectfield cf half right"> \
           <select v-model="category.category"> \
             <option value="">Keine Kategorie</option> \
-            <option v-for="cat in categories" :value="cat.ID"> {{ cat.title }} </option> \
+            <option v-for="cat in categories" v-if="cat.ID != category.ID" :value="cat.ID"> {{ cat.title }} </option> \
           </select> \
         </div> \
         <div class="cf"> \

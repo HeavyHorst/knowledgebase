@@ -35,7 +35,7 @@ Vue.component("article-dialog", {
     <hr> \
     <div class="mdl-dialog__content"> \
       <form action="" class="cf"> \
-        <input v-model="article.id" type="hidden" name="ID" value=""> \
+        <input v-model="article.ID" type="hidden" name="ID" value=""> \
         <div class="mdl-selectfield cf half left"> \
           <input v-model="article.title" type="text" placeholder="Titel"> \
           <select v-model="article.category"> \
