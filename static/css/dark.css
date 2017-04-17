@@ -1,5 +1,10 @@
-#article, a, .mdl-layout__header-row {
+#article, .mdl-layout__header-row {
     color: white;
+    font-weight: 600;
+}
+
+a {
+    color: steelblue;
     font-weight: 600;
 }
 
