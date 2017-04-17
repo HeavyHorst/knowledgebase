@@ -125,9 +125,9 @@
                      <template v-if="article.fragments.article">
                         <span v-for="frag in article.fragments.article" v-html="frag"></span>
                      </template>
-                     <span v-else>{{ article.short }}</span>
+		     <span v-else v-html='mdToHtml(article.short)'></span>
                   </template>
-                  <span v-else>{{ article.short }}</span>
+		  <span v-else v-html='mdToHtml(article.short)'></span>
                </div>
             </div>
          </template>
