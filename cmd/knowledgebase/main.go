@@ -92,8 +92,7 @@ func main() {
 
 		r.Route("/categories", func(r chi.Router) {
 			r.Use(rta)
-			r.Get("/", listCategories(store, false))
-			r.Get("/base", listCategories(store, true))
+			r.Get("/", listCategories(store))
 			r.Post("/", createCategory(store))
 			r.Get("/search", searchCategories(store))
 			r.Get("/category/:categoryID", listCategoriesForCategory(store))

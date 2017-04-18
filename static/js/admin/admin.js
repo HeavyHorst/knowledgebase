@@ -204,7 +204,7 @@ const app = new Vue({
       var obj = {};
       var list = [];
 
-      this.fetchCategories("/api/categories/base", function(json) {
+      this.fetchCategories("/api/categories/category/", function(json) {
         if (json) {
           that.categories = json;
         } else {

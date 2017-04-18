@@ -58,7 +58,7 @@
                 <user-dialog :username="user.username"></user-dialog>
                 <login-dialog></login-dialog>
                 <template v-if="view == 'categories'">
-                        <transition-group name="clist" tag="ul" class="demo-list-three mdl-list">
+                    <transition-group name="clist" tag="ul" class="demo-list-three mdl-list">
                         <template v-for="category in categories">
                             <li class="mdl-list__item" :key="category.ID" :id="category.ID" v-bind:style="{ overflow: 'visible', marginLeft: category.margin + 'px' }">
                                 <div style="width: 100%; cursor:pointer;">
@@ -95,7 +95,7 @@
                                 </p>
                             </template>
                         </template>
-                        </transition-group>
+                    </transition-group>
                     </ul>
                     <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-color--blue-grey-400 right_corner_fixed"
                         v-on:click="newCategoryDialog">
@@ -195,45 +195,46 @@
                                     <button class="mdl-button mdl-js-button mdl-button--icon" v-on:click="newUserDialog">
                               <i class="material-icons">add</i>
                               </button>
-                           </th>
-                        </tr>
-                     </thead>
-                     <tbody class="list">
-                        <template v-for="user in users">
-                           <tr :id="user.username">
-                              <td class="mdl-data-table__cell--non-numeric">
-                                 <div v-if="user.image" class="content__logo"><img class="img-circle" :src="user.image"></div>
-                                 <div v-else class="content__logo"><img class="img-circle" src="/static/images/user-icon.svg"></div>
-                              </td>
-                              <td class="mdl-data-table__cell--non-numeric">
-                                 {{ user.username }}
-                              </td>
-                              <td class="mdl-data-table__cell--non-numeric">
-                                 {{ user.first_name }}
-                              </td>
-                              <td class="mdl-data-table__cell--non-numeric">
-                                 {{ user.last_name }}
-                              </td>
-                              <td class="mdl-data-table__cell--non-numeric">
-                                 {{ user.is_admin }}
-                              </td>
-                              <td class="mdl-data-table__cell--non-numeric" style="overflow:visible;">
-                                 <button :id="user.username + '-menu'" class="mdl-button mdl-js-button mdl-button--icon">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+                            <template v-for="user in users">
+                                <tr :id="user.username">
+                                    <td class="mdl-data-table__cell--non-numeric">
+                                        <div v-if="user.image" class="content__logo"><img class="img-circle" :src="user.image"></div>
+                                        <div v-else class="content__logo"><img class="img-circle" src="/static/images/user-icon.svg"></div>
+                                    </td>
+                                    <td class="mdl-data-table__cell--non-numeric">
+                                        {{ user.username }}
+                                    </td>
+                                    <td class="mdl-data-table__cell--non-numeric">
+                                        {{ user.first_name }}
+                                    </td>
+                                    <td class="mdl-data-table__cell--non-numeric">
+                                        {{ user.last_name }}
+                                    </td>
+                                    <td class="mdl-data-table__cell--non-numeric">
+                                        {{ user.is_admin }}
+                                    </td>
+                                    <td class="mdl-data-table__cell--non-numeric" style="overflow:visible;">
+                                        <button :id="user.username + '-menu'" class="mdl-button mdl-js-button mdl-button--icon">
                                  <i class="material-icons">more_vert</i>
                                  </button>
-                                 <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" :for="user.username + '-menu'">
-                                    <li class="mdl-menu__item" v-on:click="changeUserDialog"> Bearbeiten</li>
-                                    <li class="mdl-menu__item" v-on:click="deleteUser"> Löschen</li>
-                                 </ul>
-                              </td>
-                           </tr>
-                        </template>
-                     </tbody>
-                  </table>
-               </template>
+                                        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" :for="user.username + '-menu'">
+                                            <li class="mdl-menu__item" v-on:click="changeUserDialog"> Bearbeiten</li>
+                                            <li class="mdl-menu__item" v-on:click="deleteUser"> Löschen</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
             </div>
-         </main>
-      </div>
-   </body>
-   <script src="/static/js/admin/admin.js"></script>
+        </main>
+    </div>
+</body>
+<script src="/static/js/admin/admin.js"></script>
+
 </html>
