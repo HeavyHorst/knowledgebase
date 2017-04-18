@@ -28,7 +28,7 @@ type ArticleHistoryGetter interface {
 }
 
 type ArticleLister interface {
-	ListArticles(limit, offset int) ([]models.Article, error)
+	ListArticles(limit, offset int) ([]models.Article, int, error)
 	ListArticlesForCategory(catID string) ([]models.Article, error)
 }
 

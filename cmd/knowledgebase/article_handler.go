@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -57,12 +58,13 @@ func listArticles(store ArticleLister) func(w http.ResponseWriter, r *http.Reque
 			}
 		}
 
-		result, err := store.ListArticles(limit, offset)
+		result, totalCount, err := store.ListArticles(limit, offset)
 		if err != nil {
 			logAndHTTPError(w, r, 500, err.Error(), err)
 			return
 		}
 
+		w.Header().Set("X-Total-Count", fmt.Sprintf("%d", totalCount))
 		writeJSON(w, r, result)
 	}
 }

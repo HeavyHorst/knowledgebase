@@ -7,6 +7,7 @@ import (
 	"github.com/HeavyHorst/knowledgebase/pkg/models"
 	"github.com/HeavyHorst/knowledgebase/pkg/ulid"
 	"github.com/blevesearch/bleve"
+	"github.com/boltdb/bolt"
 	"github.com/pkg/errors"
 	"github.com/russross/blackfriday"
 	"github.com/timshannon/bolthold"
@@ -90,25 +91,32 @@ func (b *ArticleStore) GetArticle(id string) (models.Article, error) {
 	return art, nil
 }
 
-func (b *ArticleStore) ListArticles(limit, offset int) ([]models.Article, error) {
-	var result []models.Article
+func (b *ArticleStore) ListArticles(limit, offset int) ([]models.Article, int, error) {
+	var (
+		result []models.Article
+		count  int
+	)
+
 	err := b.store.Find(&result, bolthold.Where(bolthold.Key).Ne("").Skip(offset).Limit(limit))
-	//cache := make(map[string]models.UserInfo)
+	b.store.Bolt().View(func(tx *bolt.Tx) error {
+		// Assume bucket exists and has keys
+		b := tx.Bucket([]byte("Article"))
+		c := b.Cursor()
+		for k, _ := c.First(); k != nil; k, _ = c.Next() {
+			count++
+		}
+		return nil
+	})
 
 	// we don't want the complete article in the listing
 	for k := range result {
-		/*authors, err := b.getAuthorsForArticle(result[k].ID, cache)
-		if err != nil {
-			return nil, err
-		}
-		result[k].Authors = authors*/
 		result[k].Article = ""
 		if result[k].Authors == nil {
 			result[k].Authors = make([]models.UserInfo, 0)
 		}
 	}
 
-	return result, errors.Wrap(err, "couldn't get list of articles")
+	return result, count, errors.Wrap(err, "couldn't get list of articles")
 }
 
 func (b *ArticleStore) ListArticlesForCategory(catID string) ([]models.Article, error) {

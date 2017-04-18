@@ -172,10 +172,12 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
-                                    <td class="mdl-data-table__cell--non-numeric center">
+                                    <td class="mdl-data-table__cell--non-numeric">
                                         <i class="material-icons" style="font-size: 30px; cursor: pointer;" v-on:click="decArtOffset">keyboard_arrow_left</i>
                                         <i class="material-icons" style="font-size: 30px; cursor: pointer;" v-on:click="incArtOffset">keyboard_arrow_right</i>
+                                    </td>
+                                    <td class="mdl-data-table__cell--non-numeric center">
+                                        {{ (artOffset + articles.length) }}/{{ artTotal }}
                                     </td>
                                 </tr>
                             </template>

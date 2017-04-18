@@ -12,6 +12,7 @@ const app = new Vue({
 
     artLimit: 10,
     artOffset: 0,
+    artTotal: 0,
     artPaginate: true,
 
     category: { id: "" },
@@ -131,7 +132,9 @@ const app = new Vue({
       }
     },
     incArtOffset: function() {
-      this.artOffset += this.artLimit;
+      if (this.artOffset + this.articles.length < this.artTotal) {
+        this.artOffset += this.artLimit;
+      }
     },
     decArtOffset: function() {
       if (this.artOffset >= this.artLimit) {
@@ -237,11 +240,11 @@ const app = new Vue({
         type: "GET",
         headers: { Authorization: "Bearer " + that.token },
         data: { offset: that.artOffset, limit: that.artLimit },
-        success: function(json) {
+        success: function(json, status, xhr) {
           that.setArticleView();
 
           if (callback) {
-            callback(json);
+            callback(json, status, xhr);
           }
         }
       });
@@ -259,10 +262,11 @@ const app = new Vue({
     fetchAllArticles: function() {
       var that = this;
       that.artPaginate = true;
-      this.fetchArticles("/api/articles", function(json) {
+      this.fetchArticles("/api/articles", function(json, status, xhr) {
         //that.activeCategory = "";
         that.articles = json;
         that.category = { id: "" };
+        that.artTotal = Number(xhr.getResponseHeader("X-Total-Count"));
       });
     },
     fetchAllUsers: function() {
