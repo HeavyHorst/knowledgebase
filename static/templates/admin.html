@@ -32,6 +32,16 @@
                     <label class="mdl-textfield__label" for="mainsearch">Suchen</label>
                 </div>
                 <div class="mdl-layout-spacer"></div>
+
+                            <template v-if="artPaginate && view == 'articles'">
+                                        <button class="mdl-button mdl-js-button mdl-button--icon" v-on:click="decArtOffset">
+                                            <i class="material-icons">keyboard_arrow_left</i>
+                                        </button>
+                                        <button class="mdl-button mdl-js-button mdl-button--icon" v-on:click="incArtOffset">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                        </button>
+                                        {{ (artOffset + articles.length) }}/{{ artTotal }}
+                            </template>
             </div>
         </header>
         <div class="demo-drawer mdl-layout__drawer mdl-color--grey-900 mdl-color-text--blue-grey-50">
@@ -163,21 +173,6 @@
                                             <li class="mdl-menu__item" v-on:click="changeArticleDialog"> Bearbeiten</li>
                                             <li class="mdl-menu__item" v-on:click="deleteArticle"> Löschen</li>
                                         </ul>
-                                    </td>
-                                </tr>
-                            </template>
-                            <template v-if="artPaginate">
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="mdl-data-table__cell--non-numeric">
-                                        <i class="material-icons" style="font-size: 30px; cursor: pointer;" v-on:click="decArtOffset">keyboard_arrow_left</i>
-                                        <i class="material-icons" style="font-size: 30px; cursor: pointer;" v-on:click="incArtOffset">keyboard_arrow_right</i>
-                                    </td>
-                                    <td class="mdl-data-table__cell--non-numeric center">
-                                        {{ (artOffset + articles.length) }}/{{ artTotal }}
                                     </td>
                                 </tr>
                             </template>
