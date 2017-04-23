@@ -412,11 +412,14 @@ const app = new Vue({
     deleteCategory: function(event) {
       var that = this;
       var id = $(event.target).parents(".mdl-list__item").attr("id");
-      deleteResource(
-        "/api/categories/" + id,
-        this.token,
-        that.fetchAllCategories
-      );
+      deleteResource("/api/categories/" + id, this.token, function() {
+        for (var i = 0; i < that.categories.length; i++) {
+          if (that.categories[i].ID == id) {
+            that.categories.splice(i, 1);
+            return;
+          }
+        }
+      });
     },
     deleteUser: function(event) {
       var that = this;
