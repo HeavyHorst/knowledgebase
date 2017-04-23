@@ -32,7 +32,7 @@ const app = new Vue({
     }
   },
   created: function() {
-    bus.$on("refresh-categories", this.fetchAllCategories);
+    bus.$on("refresh-categories", this.updateCategories);
     bus.$on("refresh-articles", this.updateArticles);
     bus.$on("refresh-users", this.fetchAllUsers);
     bus.$on("set-token", this.setToken);
@@ -204,8 +204,6 @@ const app = new Vue({
     },
     fetchAllCategories: function() {
       var that = this;
-      var obj = {};
-      var list = [];
 
       this.fetchCategories("/api/categories/category/", function(json) {
         if (json) {
@@ -214,6 +212,51 @@ const app = new Vue({
           that.categories = [];
         }
         that.setCategoryView();
+      });
+    },
+    updateCategories: function(id) {
+      var that = this;
+
+      if (!that.categories) {
+        that.categories = [];
+      }
+
+      this.fetchCategories("/api/categories/" + id, function(json) {
+        var index = 0;
+        var found = false;
+        var categoryChanged = false;
+        json.margin = 0;
+
+        for (var i = 0; i < that.categories.length; i++) {
+          if (that.categories[i].ID == id) {
+            index = i;
+            found = true;
+            if (that.categories[i].category != json.category) {
+              categoryChanged = true;
+            }
+          }
+          if (that.categories[i].ID == json.category) {
+            json.margin = (that.categories[i].margin || 0) + 50;
+          }
+        }
+
+        if (found && !categoryChanged) {
+          that.categories.splice(index, 1, json);
+          return;
+        } else if (categoryChanged) {
+          that.categories.splice(index, 1);
+        }
+
+        if (json.category == "") {
+          that.categories.push(json);
+        } else {
+          for (var i = 0; i < that.categories.length; i++) {
+            if (that.categories[i].ID == json.category) {
+              that.categories.splice(i+1, 0, json);
+              return
+            }
+          }
+        }
       });
     },
     updateArticles: function(id) {

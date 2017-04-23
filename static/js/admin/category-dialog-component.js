@@ -129,8 +129,14 @@ Vue.component("category-dialog", {
         headers: { Authorization: "Bearer " + that.token },
         data: JSON.stringify(that.category),
         contentType: "application/json; charset=utf-8",
-        success: function() {
-          bus.$emit("refresh-categories");
+        success: function(data, status, xhr) {
+          var location = xhr.getResponseHeader("Location");
+          var id = that.category.ID;
+          if (location) {
+            var p = location.split("/");
+            id = p[p.length - 1];
+          }
+          bus.$emit("refresh-categories", id);
           dialog.close();
         }
       });
