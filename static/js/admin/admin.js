@@ -47,10 +47,6 @@ const app = new Vue({
   updated: function() {
     window.componentHandler.upgradeAllRegistered();
 
-    this.$nextTick(function() {
-      document.querySelector(".mdl-layout__content").scrollTop = 0;
-    });
-
     $("#mainsearch").unbind("keyup");
     var that = this;
     $("#mainsearch").on("keyup", function(e) {
@@ -79,6 +75,11 @@ const app = new Vue({
     }
   },
   methods: {
+    scrollTop: function() {
+      this.$nextTick(function() {
+        document.querySelector(".mdl-layout__content").scrollTop = 0;
+      });
+    },
     removeToken: function() {
       this.token = "";
       localStorage.removeItem("token");
@@ -145,12 +146,15 @@ const app = new Vue({
     },
     setUserView: function() {
       this.view = "users";
+      this.scrollTop();
     },
     setArticleView: function() {
       this.view = "articles";
+      this.scrollTop();
     },
     setCategoryView: function() {
       this.view = "categories";
+      this.scrollTop();
     },
     fetchCategoriesForCategory: function(event) {
       var that = this;
@@ -252,8 +256,8 @@ const app = new Vue({
         } else {
           for (var i = 0; i < that.categories.length; i++) {
             if (that.categories[i].ID == json.category) {
-              that.categories.splice(i+1, 0, json);
-              return
+              that.categories.splice(i + 1, 0, json);
+              return;
             }
           }
         }
