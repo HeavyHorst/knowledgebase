@@ -38,13 +38,7 @@ $(document).ready(function() {
       this.mdconverter.setFlavor("github");
 
       window.onpopstate = event => {
-        if (event.state === null) {
-          if (window.location.hash) {
-            document.querySelector(window.location.hash).scrollIntoView();
-          }
-          event.preventDefault();
-          return false;
-        }
+        event.preventDefault();
         this.parseRoute();
       };
 
@@ -82,7 +76,9 @@ $(document).ready(function() {
     },
     watch: {
       url_path: function(val) {
-        history.pushState({}, "", this.url_path);
+        if (window.location.pathname + window.location.hash != this.url_path) {
+          window.history.pushState({}, "", this.url_path);
+        }
       },
       theme: function(val) {
         if (val === "dark") {
