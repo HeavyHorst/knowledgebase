@@ -169,6 +169,11 @@ const app = new Vue({
 
       if (!$("#" + id).hasClass("is-expanded")) {
         this.fetchCategories("/api/categories/category/" + id, function(json) {
+          // load the article page if there are no subcategories
+          if (!json) {
+            that.fetchArticlesForCategory(event);
+          }
+
           if (json) {
             var json = json.map(function(elem) {
               elem.margin = margin + 50;
