@@ -2,6 +2,7 @@ package storage
 
 import (
 	"fmt"
+	"sort"
 	"time"
 
 	"github.com/HeavyHorst/knowledgebase/pkg/models"
@@ -53,12 +54,22 @@ func (b *CategoryStore) GetCategory(id string) (models.Category, error) {
 func (b *CategoryStore) ListCategories() ([]models.Category, error) {
 	var result []models.Category
 	err := b.store.Find(&result, nil)
+
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].Title < result[j].Title
+	})
+
 	return result, errors.Wrap(err, "couldn't get category list")
 }
 
 func (b *CategoryStore) ListCategoriesForCategory(catID string) ([]models.Category, error) {
 	var result []models.Category
 	err := b.store.Find(&result, bolthold.Where("Category").Eq(catID))
+
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].Title < result[j].Title
+	})
+
 	return result, errors.Wrapf(err, "couldn't get categories for category %s", catID)
 }
 
