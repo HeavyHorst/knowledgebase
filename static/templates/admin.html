@@ -116,11 +116,11 @@
                     <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="articles_table" style="min-width: 100%; width: 100%;">
                         <thead>
                             <tr>
-                                <th class="mdl-data-table__cell--non-numeric" data-sort="titel" style="min-width: 100px;">Titel</th>
-                                <th class="mdl-data-table__cell--non-numeric" style="width:30%;">Beschreibung</th>
+				<th class="mdl-data-table__cell--non-numeric artsort" style="cursor:pointer" id="artTabletitle" v-on:click="setArticleSorting('title')" style="min-width: 100px;">Titel</th>
+				<th class="mdl-data-table__cell--non-numeric artsort" style="cursor:pointer" id="artTabledescription" v-on:click="setArticleSorting('description')" style="width:30%;">Beschreibung</th>
                                 <th class="mdl-data-table__cell--non-numeric">Tags</th>
                                 <th class="mdl-data-table__cell--non-numeric" style="width: 175px;">Autoren</th>
-                                <th class="mdl-data-table__cell--non-numeric">zuletzt geändert</th>
+                                <th class="mdl-data-table__cell--non-numeric artsort mdl-data-table__header--sorted-ascending" style="cursor:pointer" id="artTablelast_modified" v-on:click="setArticleSorting('last_modified')" >zuletzt geändert</th>
                                 <th class="mdl-data-table__cell--non-numeric center" style="width:100px;">
                                     <button class="mdl-button mdl-js-button mdl-button--icon" v-on:click="newArticleDialog">
                               <i class="material-icons">add</i>

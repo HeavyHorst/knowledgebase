@@ -2,12 +2,12 @@ package storage
 
 import (
 	"fmt"
+	"sort"
 	"time"
 
 	"github.com/HeavyHorst/knowledgebase/pkg/models"
 	"github.com/HeavyHorst/knowledgebase/pkg/ulid"
 	"github.com/blevesearch/bleve"
-	"github.com/boltdb/bolt"
 	"github.com/pkg/errors"
 	"github.com/russross/blackfriday"
 	"github.com/timshannon/bolthold"
@@ -82,55 +82,51 @@ func (b *ArticleStore) GetArticle(id string) (models.Article, error) {
 		art.Authors = make([]models.UserInfo, 0)
 	}
 
-	/*authors, err := b.getAuthorsForArticle(id, nil)
-	if err != nil {
-		return art, err
-	}
-	art.Authors = authors*/
-
 	return art, nil
 }
 
-func (b *ArticleStore) ListArticles(limit, offset int) ([]models.Article, int, error) {
-	var (
-		result []models.Article
-		count  int
-	)
+func (b *ArticleStore) ListArticles(limit, offset int, sortBy string, reverse bool) ([]models.Article, int, error) {
+	var result []models.Article
 
-	err := b.store.Find(&result, bolthold.Where(bolthold.Key).Ne("").Skip(offset).Limit(limit))
-	b.store.Bolt().View(func(tx *bolt.Tx) error {
-		// Assume bucket exists and has keys
-		b := tx.Bucket([]byte("Article"))
-		c := b.Cursor()
-		for k, _ := c.First(); k != nil; k, _ = c.Next() {
-			count++
-		}
-		return nil
-	})
+	err := b.store.Find(&result, nil)
+	count := len(result)
+	end := offset + limit
+	if end >= count {
+		end = count
+	}
 
+	switch sortBy {
+	case "title":
+		sort.Slice(result, func(i, j int) bool {
+			return (result[i].Title < result[j].Title) && !reverse
+		})
+	case "description":
+		sort.Slice(result, func(i, j int) bool {
+			return (result[i].Short < result[j].Short) && !reverse
+		})
+	case "last_modified":
+		sort.Slice(result, func(i, j int) bool {
+			return (result[i].LastModified.After(result[j].LastModified)) && !reverse
+		})
+	}
+
+	subRes := result[offset:end]
 	// we don't want the complete article in the listing
-	for k := range result {
-		result[k].Article = ""
-		if result[k].Authors == nil {
-			result[k].Authors = make([]models.UserInfo, 0)
+	for k := range subRes {
+		subRes[k].Article = ""
+		if subRes[k].Authors == nil {
+			subRes[k].Authors = make([]models.UserInfo, 0)
 		}
 	}
 
-	return result, count, errors.Wrap(err, "couldn't get list of articles")
+	return subRes, count, errors.Wrap(err, "couldn't get list of articles")
 }
 
 func (b *ArticleStore) ListArticlesForCategory(catID string) ([]models.Article, error) {
 	var result []models.Article
 	err := b.store.Find(&result, bolthold.Where("Category").Eq(catID))
-	//cache := make(map[string]models.UserInfo)
 
-	// we don't want the complete article in the listing
 	for k := range result {
-		/*authors, err := b.getAuthorsForArticle(result[k].ID, cache)
-		if err != nil {
-			return nil, err
-		}
-		result[k].Authors = authors*/
 		result[k].Article = ""
 		if result[k].Authors == nil {
 			result[k].Authors = make([]models.UserInfo, 0)

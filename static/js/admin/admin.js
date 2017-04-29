@@ -13,6 +13,8 @@ const app = new Vue({
     artLimit: 10,
     artOffset: 0,
     artTotal: 0,
+    artSortBy: "last_modified",
+    artSortRev: false,
     artPaginate: true,
 
     category: { id: "" },
@@ -67,6 +69,10 @@ const app = new Vue({
     });
   },
   watch: {
+    artSortBy: function() {
+      this.artOffset = 0;
+      this.fetchAllArticles();
+    },
     artLimit: function() {
       this.fetchAllArticles();
     },
@@ -75,6 +81,25 @@ const app = new Vue({
     }
   },
   methods: {
+    setArticleSorting: function(field) {
+      $(".artsort").removeClass(
+        "mdl-data-table__header--sorted-ascending mdl-data-table__header--sorted-descending"
+      );
+
+      var sortClass = "mdl-data-table__header--sorted-ascending";
+      if (field == this.artSortBy) {
+        this.artSortRev = !this.artSortRev;
+        this.fetchAllArticles();
+
+        if (this.artSortRev) {
+          sortClass = "mdl-data-table__header--sorted-descending";
+        }
+      } else {
+        this.artSortRev = false;
+        this.artSortBy = field;
+      }
+      $("#artTable" + field).addClass(sortClass);
+    },
     scrollTop: function() {
       this.$nextTick(function() {
         document.querySelector(".mdl-layout__content").scrollTop = 0;
@@ -275,7 +300,7 @@ const app = new Vue({
         that.articles = [];
       }
 
-      this.fetchArticles("/api/articles/" + id, function(json) {
+      this.fetchArticles("/api/articles/" + id, {}, function(json) {
         for (var i = 0; i < that.articles.length; i++) {
           if (that.articles[i].ID == id) {
             that.articles.splice(i, 1, json);
@@ -285,13 +310,13 @@ const app = new Vue({
         that.articles.push(json);
       });
     },
-    fetchArticles: function(url, callback) {
+    fetchArticles: function(url, data, callback) {
       var that = this;
       $.ajax({
         url: url,
         type: "GET",
         headers: { Authorization: "Bearer " + that.token },
-        data: { offset: that.artOffset, limit: that.artLimit },
+        data: data,
         success: function(json, status, xhr) {
           that.setArticleView();
 
@@ -305,7 +330,7 @@ const app = new Vue({
       var that = this;
       that.artPaginate = false;
       var id = $(event.target).parents(".mdl-list__item").attr("id");
-      this.fetchArticles("/api/articles/category/" + id, function(json) {
+      this.fetchArticles("/api/articles/category/" + id, {}, function(json) {
         //that.activeCategory = id;
         that.articles = json;
         that.category = { id: id };
@@ -314,12 +339,21 @@ const app = new Vue({
     fetchAllArticles: function() {
       var that = this;
       that.artPaginate = true;
-      this.fetchArticles("/api/articles", function(json, status, xhr) {
-        //that.activeCategory = "";
-        that.articles = json;
-        that.category = { id: "" };
-        that.artTotal = Number(xhr.getResponseHeader("X-Total-Count"));
-      });
+      this.fetchArticles(
+        "/api/articles",
+        {
+          offset: that.artOffset,
+          limit: that.artLimit,
+          sortBy: that.artSortBy,
+          reverse: that.artSortRev
+        },
+        function(json, status, xhr) {
+          //that.activeCategory = "";
+          that.articles = json;
+          that.category = { id: "" };
+          that.artTotal = Number(xhr.getResponseHeader("X-Total-Count"));
+        }
+      );
     },
     fetchAllUsers: function() {
       var that = this;

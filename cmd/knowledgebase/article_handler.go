@@ -35,6 +35,7 @@ func listArticles(store ArticleLister) func(w http.ResponseWriter, r *http.Reque
 	return func(w http.ResponseWriter, r *http.Request) {
 		offset := 0
 		limit := 20
+		rev := false
 
 		err := r.ParseForm()
 		if err != nil {
@@ -58,7 +59,13 @@ func listArticles(store ArticleLister) func(w http.ResponseWriter, r *http.Reque
 			}
 		}
 
-		result, totalCount, err := store.ListArticles(limit, offset)
+		sortBy := r.Form.Get("sortBy")
+		reverse := r.Form.Get("reverse")
+		if reverse != "false" {
+			rev = true
+		}
+
+		result, totalCount, err := store.ListArticles(limit, offset, sortBy, rev)
 		if err != nil {
 			logAndHTTPError(w, r, 500, err.Error(), err)
 			return
