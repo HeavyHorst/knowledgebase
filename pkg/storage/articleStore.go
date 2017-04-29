@@ -126,6 +126,10 @@ func (b *ArticleStore) ListArticlesForCategory(catID string) ([]models.Article, 
 	var result []models.Article
 	err := b.store.Find(&result, bolthold.Where("Category").Eq(catID))
 
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].LastModified.After(result[j].LastModified)
+	})
+
 	for k := range result {
 		result[k].Article = ""
 		if result[k].Authors == nil {
