@@ -651,7 +651,6 @@ form textarea {
   display: inline-block;
   position: absolute !important;
   margin-right: 10px;
-  backface-visibility: hidden;
 }
 
 .clist-enter-active, .clist-leave-active {
@@ -682,6 +681,3 @@ form textarea {
   transition: all .0s;
 }
 
-.table-row-item {
-  backface-visibility: hidden;
-}

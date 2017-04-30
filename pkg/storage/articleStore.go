@@ -98,15 +98,15 @@ func (b *ArticleStore) ListArticles(limit, offset int, sortBy string, reverse bo
 	switch sortBy {
 	case "title":
 		sort.Slice(result, func(i, j int) bool {
-			return (result[i].Title < result[j].Title) && !reverse
+			return (result[i].Title < result[j].Title) != reverse
 		})
 	case "description":
 		sort.Slice(result, func(i, j int) bool {
-			return (result[i].Short < result[j].Short) && !reverse
+			return (result[i].Short < result[j].Short) != reverse
 		})
 	case "last_modified":
 		sort.Slice(result, func(i, j int) bool {
-			return (result[i].LastModified.After(result[j].LastModified)) && !reverse
+			return (result[i].LastModified.After(result[j].LastModified)) != reverse
 		})
 	}
 
