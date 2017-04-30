@@ -674,6 +674,10 @@ form textarea {
   transition: all .5s;
 }
 
+.table-row-enter, .table-row-leave-to /* .list-leave-active for <2.1.8 */ {
+  opacity: 0;
+}
+
 .table-row-leave-active, .table-row-enter-active {
   transition: all .0s;
 }
