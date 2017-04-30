@@ -649,9 +649,11 @@ form textarea {
 
 .clist-item {
   display: inline-block;
-  position: absolute;
+  position: absolute !important;
   margin-right: 10px;
+  backface-visibility: hidden;
 }
+
 .clist-enter-active, .clist-leave-active {
   transition: all .5s;
 }
@@ -666,4 +668,16 @@ form textarea {
 
 .clist-move {
   transition: transform .5s;
+}
+
+.table-row-move {
+  transition: all .5s;
+}
+
+.table-row-leave-active, .table-row-enter-active {
+  transition: all .0s;
+}
+
+.table-row-item {
+  backface-visibility: hidden;
 }

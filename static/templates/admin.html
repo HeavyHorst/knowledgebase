@@ -113,7 +113,7 @@
                   </button>
                 </template>
                 <template v-if="view == 'articles'">
-                    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id="articles_table" style="min-width: 100%; width: 100%;">
+                    <table class="mdl-data-table mdl-shadow--2dp" id="articles_table" style="min-width: 100%; width: 100%;">
                         <thead>
                             <tr>
 				<th class="mdl-data-table__cell--non-numeric artsort" style="cursor:pointer" id="artTabletitle" v-on:click="setArticleSorting('title')" style="min-width: 100px;">Titel</th>
@@ -128,9 +128,8 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="list">
-                            <template v-for="article in articles">
-                                <tr :id="article.ID">
+			<tbody  name="table-row" is="transition-group">
+                                <tr v-for="article in articles" :key="article.ID" :id="article.ID">
                                     <td class="mdl-data-table__cell--non-numeric titel wrap">
                                         <h2 class="card_heading">{{article.title}}</h2>
                                     </td>
@@ -175,8 +174,7 @@
                                         </ul>
                                     </td>
                                 </tr>
-                            </template>
-                        </tbody>
+                        </transition-group>
                     </table>
                 </template>
                 <template v-if="view == 'users'">

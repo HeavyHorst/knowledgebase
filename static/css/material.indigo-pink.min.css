@@ -2793,7 +2793,7 @@ fieldset[disabled] .mdl-checkbox .mdl-checkbox__ripple-container .mdl-ripple,
 }
 .mdl-data-table {
     position: relative;
-    border: 1px solid rgba(0, 0, 0, .12);
+    border: none;
     border-collapse: collapse;
     white-space: nowrap;
     font-size: 13px;
@@ -2808,9 +2808,9 @@ fieldset[disabled] .mdl-checkbox .mdl-checkbox__ripple-container .mdl-ripple,
 .mdl-data-table tbody tr {
     position: relative;
     height: 48px;
-    transition-duration: .28s;
+    /*transition-duration: .28s;
     transition-timing-function: cubic-bezier(.4, 0, .2, 1);
-    transition-property: background-color
+    transition-property: background-color*/
 }
 .mdl-data-table tbody tr.is-selected {
     background-color: #e0e0e0
@@ -2836,8 +2836,8 @@ fieldset[disabled] .mdl-checkbox .mdl-checkbox__ripple-container .mdl-ripple,
 .mdl-data-table td {
     position: relative;
     height: 48px;
-    border-top: 1px solid rgba(0, 0, 0, .12);
-    border-bottom: 1px solid rgba(0, 0, 0, .12);
+/*    border-top: 1px solid rgba(0, 0, 0, .12);
+    border-bottom: 1px solid rgba(0, 0, 0, .12);*/
     padding: 12px 18px;
     box-sizing: border-box
 }
