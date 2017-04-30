@@ -74,7 +74,7 @@
                                 <div style="width: 100%; cursor:pointer;">
                                     <span class="mdl-list__item-primary-content" v-on:click="fetchCategoriesForCategory">
                                  <div class="article__list_logo"><img :src="category.image"></div>
-                                 <span class="titel" style="margin-right: 1em;">{{category.title}}</span>
+				 <span class="titel" style="margin-right: 1em; width:200px; min-width: 200px;">{{category.title}}</span>
                                     <span class="mdl-list__item-text-body beschreibung">
 			         <span v-html='mdToHtml(category.description)'></span>
                                     </span>
