@@ -627,6 +627,16 @@ paths:
           default: 0
           required: false
           type: integer
+        - name: sortBy
+          in: query
+          required: false
+          type: string
+          enum: ["title", "description", "last_modified"]
+        - name: reverse
+          in: query
+          required: false
+          description: "reverse the sort order."
+          type: boolean
       produces:
       - "application/json"
       responses:
