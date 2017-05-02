@@ -219,6 +219,12 @@
 			"revisionTime": "2016-11-17T03:31:26Z"
 		},
 		{
+			"checksumSHA1": "ndyRNX0Tl4+70A17zSt3isuuAhI=",
+			"path": "github.com/goware/cors",
+			"revision": "6ad15f4e1489e41776ee8b008597eafea9a67fd9",
+			"revisionTime": "2016-10-25T15:14:09Z"
+		},
+		{
 			"checksumSHA1": "plye7pUJSHwBcI5lmVf7vozbRuo=",
 			"path": "github.com/mattn/go-colorable",
 			"revision": "acb9493f2794fd0f820de7a27a217dafbb1b65ea",
@@ -339,5 +345,5 @@
 			"revisionTime": "2017-01-03T07:35:22Z"
 		}
 	],
-	"rootPath": "github.com/HeavyHorst/sunoKB"
+	"rootPath": "github.com/HeavyHorst/knowledgebase"
 }

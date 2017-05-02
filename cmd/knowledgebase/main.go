@@ -12,6 +12,7 @@ import (
 	"github.com/HeavyHorst/knowledgebase/pkg/storage"
 	"github.com/Sirupsen/logrus"
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/goware/cors"
 	"github.com/pressly/chi"
 	"github.com/pressly/chi/middleware"
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"
@@ -49,6 +50,16 @@ func main() {
 
 	r := chi.NewRouter()
 	rta := requireTokenAuthentication(store, tokenGenerator)
+
+	cors := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
+		ExposedHeaders:   []string{"Link", "Location"},
+		AllowCredentials: true,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	})
+	r.Use(cors.Handler)
 
 	// A good base middleware stack
 	r.Use(middleware.RequestID)

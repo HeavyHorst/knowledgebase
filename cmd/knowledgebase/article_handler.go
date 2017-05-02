@@ -192,7 +192,7 @@ func updateArticle(store ArticleUpdater) func(w http.ResponseWriter, r *http.Req
 			return
 		}
 
-		w.WriteHeader(http.StatusCreated)
+		w.WriteHeader(http.StatusNotModified)
 	}
 }
 

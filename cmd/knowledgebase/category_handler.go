@@ -135,7 +135,7 @@ func updateCategory(store CategoryUpdater) func(w http.ResponseWriter, r *http.R
 			return
 		}
 
-		w.WriteHeader(http.StatusCreated)
+		w.WriteHeader(http.StatusNotModified)
 	}
 }
 

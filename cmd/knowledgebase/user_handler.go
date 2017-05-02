@@ -37,13 +37,11 @@ func userCtx(store UserGetter) func(next http.Handler) http.Handler {
 func requireTokenAuthentication(store UserGetter, tokenGenerator auth.TokenGenerator) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			var token string
 			var user models.User
+			token := r.Header.Get("Authorization")
 
-			auth := r.Header.Get("Authorization")
-
-			if len(auth) > 7 && auth[:6] == "Bearer" {
-				token = auth[7:]
+			if len(token) > 7 && token[:6] == "Bearer" {
+				token = token[7:]
 			}
 
 			_, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
@@ -209,7 +207,7 @@ func updateUser(store UserUpdater) func(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 
-		w.WriteHeader(http.StatusCreated)
+		w.WriteHeader(http.StatusNoContent)
 	}
 }
 
