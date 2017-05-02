@@ -1,0 +1,809 @@
+swagger: "2.0"
+info:
+  description: ""
+  version: "1.0.0"
+  title: "Knowledgebase API server"
+  contact:
+    email: "kaufmann.r@gmail.com"
+  license:
+    name: "MIT"
+    url: "https://raw.githubusercontent.com/HeavyHorst/knowledgebase/master/LICENSE"
+host: "kb.heapoverflow.rocks"
+basePath: "/api"
+tags:
+  - name: "authorize"
+    description: "Authentication and token management."
+  - name: "users"
+    description: "Operations about users."
+  - name: "categories"
+    description: "Operations about categories."
+  - name: "articles"
+    description: "Operations about articles."
+schemes:
+- "https"
+securityDefinitions:
+  Bearer:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+paths:
+  /authorize:
+    post:
+      tags:
+        - "authorize"
+      summary: "Get a new JWT authentication token."
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "formData"
+        name: "username"
+        description: "The username."
+        required: true
+        type: string
+      - in: "formData"
+        name: "password"
+        description: "The password."
+        required: true
+        type: string
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Token"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error."
+          schema:
+            $ref: "#/definitions/Error"
+  /authorize/refresh:
+    get:
+      tags:
+        - "authorize"
+      summary: "Refresh the auth token."
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Token"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        422:
+          description: "Unprocessable Entity."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+  /users:
+    get:
+      tags:
+        - "users"
+      summary: "Get an array of all users."
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+    post:
+      tags:
+        - "users"
+      summary: "create a new user."
+      security:
+        - Bearer: []
+      consumes:
+        - "application/json"
+      parameters:
+        - name: user
+          in: body
+          description: User to add to the store
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: ""
+          headers: 
+            Location:
+              type: string
+              description: The link to the newly created user.
+        409:
+          description: "User already exists."
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+  /users/{username}:
+    get:
+      tags:
+        - "users"
+      summary: "get the specified user."
+      security:
+        - Bearer: []
+      produces:
+        - "application/json"
+      parameters:
+        - name: username
+          in: path
+          description: The unique name of the user.
+          required: true
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        422:
+          description: "Unprocessable Entity."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+    put:
+      tags:
+        - "users"
+      summary: "modify the specified user."
+      security:
+        - Bearer: []
+      parameters:
+        - name: username
+          in: path
+          description: The unique name of the user.
+          required: true
+          type: string
+      responses:
+        204:
+          description: "successful operation"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        422:
+          description: "Unprocessable Entity."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+        - "users"
+      summary: "delete the specified user."
+      security:
+        - Bearer: []
+      parameters:
+        - name: username
+          in: path
+          description: The unique name of the user.
+          required: true
+          type: string
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        422:
+          description: "Unprocessable Entity."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /categories/search:
+    get:
+      tags:
+        - "categories"
+      summary: "Search for categories."
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      parameters:
+        - name: q
+          in: query
+          required: true
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Category"
+        422:
+          description: "Unprocessable Entity."
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /categories/{categoryID}:
+    get:
+      tags:
+        - "categories"
+      summary: "Get the specified category."
+      security:
+        - Bearer: []
+      produces:
+        - "application/json"
+      parameters:
+        - name: categoryID
+          in: path
+          description: The category ID.
+          required: true
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Category"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        422:
+          description: "Unprocessable Entity."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+    put:
+      tags:
+        - "categories"
+      summary: "modify the specified category."
+      security:
+        - Bearer: []
+      parameters:
+        - name: categoryID
+          in: path
+          description: The category ID.
+          required: true
+          type: string
+      responses:
+        204:
+          description: "successful operation"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        422:
+          description: "Unprocessable Entity."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+        - "categories"
+      summary: "delete the specified category."
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      parameters:
+        - name: categoryID
+          in: path
+          description: The category ID.
+          required: true
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Category"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        422:
+          description: "Unprocessable Entity."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /categories/category/{categoryID}:
+    get:
+      tags:
+        - "categories"
+      summary: "Get child categories."
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      parameters:
+        - name: categoryID
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Category"
+        404:
+          description: "Parent category not found."
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+  
+  /categories:
+    get:
+      tags:
+        - "categories"
+      summary: "Get an array of all categories."
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Category"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+    post:
+      tags:
+        - "categories"
+      summary: "create a new category."
+      security:
+        - Bearer: []
+      consumes:
+        - "application/json"
+      parameters:
+        - name: category
+          in: body
+          description: The category
+          required: true
+          schema:
+            $ref: '#/definitions/Category'
+      responses:
+        200:
+          description: ""
+          headers: 
+            Location:
+              type: string
+              description: The link to the newly created category.
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /articles/search:
+    get:
+      tags:
+        - "articles"
+      summary: "Search for articles."
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      parameters:
+        - name: q
+          in: query
+          required: true
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Article"
+        422:
+          description: "Unprocessable Entity."
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /articles/{articleID}:
+    get:
+      tags:
+        - "articles"
+      summary: "Get the specified article."
+      security:
+        - Bearer: []
+      produces:
+        - "application/json"
+      parameters:
+        - name: articleID
+          in: path
+          description: The article ID.
+          required: true
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Article"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        422:
+          description: "Unprocessable Entity."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+    put:
+      tags:
+        - "articles"
+      summary: "modify the specified article."
+      security:
+        - Bearer: []
+      parameters:
+        - name: articleID
+          in: path
+          description: The article ID.
+          required: true
+          type: string
+      responses:
+        204:
+          description: "successful operation"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        422:
+          description: "Unprocessable Entity."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+        - "articles"
+      summary: "delete the article category."
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      parameters:
+        - name: articleID
+          in: path
+          description: The article ID.
+          required: true
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Article"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        422:
+          description: "Unprocessable Entity."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+
+  /article/category/{articleID}:
+    get:
+      tags:
+        - "articles"
+      summary: "Get articles that are children of the specified category."
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      parameters:
+        - name: articleID
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Article"
+        404:
+          description: "Parent category not found."
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+  
+  /articles:
+    get:
+      tags:
+        - "articles"
+      summary: "Get an array of articles"
+      security:
+        - Bearer: []
+      parameters:
+        - name: limit
+          in: query
+          default: 20
+          required: false
+          type: integer
+        - name: offset
+          in: query
+          default: 0
+          required: false
+          type: integer
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Article"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+    post:
+      tags:
+        - "articles"
+      summary: "create a new article."
+      security:
+        - Bearer: []
+      consumes:
+        - "application/json"
+      parameters:
+        - name: article
+          in: body
+          description: The article
+          required: true
+          schema:
+            $ref: '#/definitions/Article'
+      responses:
+        200:
+          description: ""
+          headers: 
+            Location:
+              type: string
+              description: The link to the newly created article.
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+
+
+  /articles/{articleID}/history:
+    get:
+      tags: 
+        - "articles"
+      summary: "get the articles changelog (history)"
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      parameters:
+        - name: articleID
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ArticleHistoryEntry"
+        404:
+          description: "Parent category not found."
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Wrong username or password."
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/Error"
+      
+definitions:
+  Error:
+    type: string
+            
+  Token:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+
+  User:
+    type: "object"
+    properties:
+      is_admin:
+        type: "boolean"
+      password:
+        type: "string"
+      username:
+        type: "string"
+      first_name:
+        type: "string"
+      last_name:
+        type: "string"
+      image:
+        type: "string"
+
+  UserInfo:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      first_name:
+        type: "string"
+      last_name:
+        type: "string"
+      image:
+        type: "string"
+
+  Category:
+    type: "object"
+    properties:
+      ID:
+        type: "string"
+      category:
+        type: "string"
+        description: "the parent category."
+      image:
+        type: "string"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      last_modified:
+        type: "string"
+        format: "dateTime"
+      fragments:
+        type: "object"
+
+  ArticleHistoryEntry:
+    type: "object"
+    properties:
+      ModifiedBy:
+        type: "string"
+      Timestamp:
+        type: "string"
+        format: "dateTime"
+
+  Article:
+    type: "object"
+    properties:
+      ID:
+        type: "string"
+      category:
+        type: "string"
+        description: "the parent category."
+      title:
+        type: "string"
+      short:
+        type: "string"
+        description: "a short description of the article."
+      article:
+        type: "string"
+        description: "the content of the article."
+      last_modified:
+        type: "string"
+        format: "dateTime"
+      tags:
+        type: "array"
+        items:
+          type: "string"
+      fragments:
+        type: "object"
+      authors:
+        type: "array"
+        items:
+          $ref: "#/definitions/UserInfo"
+
