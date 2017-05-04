@@ -546,7 +546,7 @@ paths:
     delete:
       tags:
         - "articles"
-      summary: "delete the article category."
+      summary: "delete the specified article."
       security:
         - Bearer: []
       produces:
