@@ -116,7 +116,7 @@ a:-webkit-any-link {
     margin: auto;
     background: white;
     padding: 60px;
-    font-size: 19px;
+    font-size: 16px;
 }
 
 #article ul, #article  ol {
@@ -135,7 +135,7 @@ a:-webkit-any-link {
 }
 
 #article ul {
-    font-size: 19px;
+    font-size: 16px;
 }
 
 #article pre {
