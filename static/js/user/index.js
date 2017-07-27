@@ -35,6 +35,10 @@ $(document).ready(function() {
     },
     created: function() {
       this.token = localStorage.getItem("token");
+      if (this.token == null) {
+        this.token = "";
+      }
+
       this.mdconverter.setFlavor("github");
 
       window.onpopstate = event => {
@@ -150,7 +154,7 @@ $(document).ready(function() {
         $.ajax({
           url: "/api/categories/category/",
           type: "GET",
-          headers: { Authorization: "Bearer " + that.token },
+          headers: { Authorization: that.token },
           success: function(json) {
             that.categories = json;
             that.view = "categories";
@@ -174,7 +178,7 @@ $(document).ready(function() {
           $.ajax({
             url: "/api/categories/category/" + id,
             type: "GET",
-            headers: { Authorization: "Bearer " + that.token },
+            headers: { Authorization: that.token },
             success: function(json) {
               categories = json;
             }
@@ -182,7 +186,7 @@ $(document).ready(function() {
           $.ajax({
             url: "/api/articles/category/" + id,
             type: "GET",
-            headers: { Authorization: "Bearer " + that.token },
+            headers: { Authorization: that.token },
             success: function(json) {
               articles = json;
             }
@@ -208,7 +212,7 @@ $(document).ready(function() {
         $.ajax({
           url: "/api/articles/" + id,
           type: "GET",
-          headers: { Authorization: "Bearer " + that.token },
+          headers: { Authorization: that.token },
           success: function(json) {
             that.article = that.mdconverter.makeHtml(
               "# " + json.title + "\n\n" + json.article
@@ -244,7 +248,7 @@ $(document).ready(function() {
         $.ajax({
           url: "/api/articles/search",
           type: "GET",
-          headers: { Authorization: "Bearer " + that.token },
+          headers: { Authorization: that.token },
           data: { q: query },
           success: function(json) {
             if (json.length === 1) {

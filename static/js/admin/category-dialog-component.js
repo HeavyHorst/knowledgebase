@@ -5,6 +5,7 @@ Vue.component("category-dialog", {
       category: {
         id: "",
         category: "",
+        public: false,
         title: "",
         image: "",
         description: ""
@@ -53,6 +54,12 @@ Vue.component("category-dialog", {
       </form> \
     </div> \
     <div class="mdl-dialog__actions"> \
+      <div class="cf left"> \
+        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="cat-pswitch"> \
+          <input type="checkbox" id="cat-pswitch" v-model="category.public" class="mdl-checkbox__input"> \
+          <span class="mdl-checkbox__label">Publish</span> \
+        </label> \
+      </div> \
       <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" v-on:click="updateCategory" >Speichern</button> \
     </div> \
   </dialog> \

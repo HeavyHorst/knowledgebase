@@ -65,7 +65,7 @@ func listArticles(store ArticleLister) func(w http.ResponseWriter, r *http.Reque
 			rev = true
 		}
 
-		result, totalCount, err := store.ListArticles(limit, offset, sortBy, rev)
+		result, totalCount, err := store.ListArticles(limit, offset, sortBy, rev, !isLoggedIn(r.Context()))
 		if err != nil {
 			logAndHTTPError(w, r, 500, err.Error(), err)
 			return
@@ -116,7 +116,7 @@ func searchArticles(store ArticleSearcher) func(w http.ResponseWriter, r *http.R
 			return
 		}
 
-		articles, err := store.SearchArticles(r.Form.Get("q"))
+		articles, err := store.SearchArticles(r.Form.Get("q"), !isLoggedIn(r.Context()))
 		if err != nil {
 			logAndHTTPError(w, r, 500, err.Error(), err)
 			return
@@ -128,7 +128,7 @@ func searchArticles(store ArticleSearcher) func(w http.ResponseWriter, r *http.R
 
 func listArticlesForCategory(store ArticleLister) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		result, err := store.ListArticlesForCategory(chi.URLParam(r, "categoryID"))
+		result, err := store.ListArticlesForCategory(chi.URLParam(r, "categoryID"), !isLoggedIn(r.Context()))
 		if err != nil {
 			http.Error(w, http.StatusText(404), 404)
 			return
@@ -155,6 +155,11 @@ func getArticle(w http.ResponseWriter, r *http.Request) {
 	art, ok := ctx.Value(contextKeyArticle).(models.Article)
 	if !ok {
 		http.Error(w, http.StatusText(422), 422)
+		return
+	}
+
+	if !art.Public && !isLoggedIn(r.Context()) {
+		http.Error(w, "Unauthorized", 401)
 		return
 	}
 

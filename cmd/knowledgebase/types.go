@@ -28,8 +28,8 @@ type ArticleHistoryGetter interface {
 }
 
 type ArticleLister interface {
-	ListArticles(limit, offset int, sortBy string, reverse bool) ([]models.Article, int, error)
-	ListArticlesForCategory(catID string) ([]models.Article, error)
+	ListArticles(limit, offset int, sortBy string, reverse bool, public bool) ([]models.Article, int, error)
+	ListArticlesForCategory(catID string, public bool) ([]models.Article, error)
 }
 
 type ArticleCreator interface {
@@ -45,7 +45,7 @@ type ArticleDeleter interface {
 }
 
 type ArticleSearcher interface {
-	SearchArticles(query string) ([]models.Article, error)
+	SearchArticles(query string, public bool) ([]models.Article, error)
 }
 
 type CategoryGetter interface {
@@ -53,8 +53,8 @@ type CategoryGetter interface {
 }
 
 type CategoryLister interface {
-	ListCategories() ([]models.Category, error)
-	ListCategoriesForCategory(catID string) ([]models.Category, error)
+	ListCategories(public bool) ([]models.Category, error)
+	ListCategoriesForCategory(catID string, public bool) ([]models.Category, error)
 }
 
 type CategoryCreator interface {
@@ -70,7 +70,7 @@ type CategoryDeleter interface {
 }
 
 type CategorySearcher interface {
-	SearchCategories(query string) ([]models.Category, error)
+	SearchCategories(query string, public bool) ([]models.Category, error)
 }
 
 type ImageGetter interface {

@@ -104,14 +104,14 @@ func main() {
 		r.Route("/categories", func(r chi.Router) {
 			r.Use(rta)
 			r.Get("/", listCategories(store))
-			r.Post("/", createCategory(store))
+			r.With(requireUser).Post("/", createCategory(store))
 			r.Get("/search", searchCategories(store))
 			r.Get("/category/:categoryID", listCategoriesForCategory(store))
 			r.Route("/:categoryID", func(r chi.Router) {
 				r.Use(categoryCtx(store))
 				r.Get("/", getCategory)
-				r.Put("/", updateCategory(store))
-				r.Delete("/", deleteCategory(store))
+				r.With(requireUser).Put("/", updateCategory(store))
+				r.With(requireUser).Delete("/", deleteCategory(store))
 			})
 		})
 

@@ -5,6 +5,7 @@ Vue.component("article-dialog", {
       article: {
         id: "",
         title: "",
+        public: false,
         category: "",
         short: "",
         article: "",
@@ -55,6 +56,12 @@ Vue.component("article-dialog", {
       </form> \
     </div> \
     <div class="mdl-dialog__actions"> \
+      <div class="cf left"> \
+        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="art-pswitch"> \
+          <input type="checkbox" id="art-pswitch" v-model="article.public" class="mdl-checkbox__input"> \
+          <span class="mdl-checkbox__label">Publish</span> \
+        </label> \
+      </div> \
       <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" v-on:click="updateArticle">Speichern</button> \
     </div> \
   </dialog> \
@@ -65,7 +72,7 @@ Vue.component("article-dialog", {
       $.ajax({
         url: "/api/categories",
         type: "GET",
-        headers: { Authorization: "Bearer " + that.token },
+        headers: { Authorization: that.token },
         success: function(json) {
           that.categories = json;
 
@@ -91,7 +98,7 @@ Vue.component("article-dialog", {
         $.ajax({
           url: "/api/articles/" + that.aid,
           type: "GET",
-          headers: { Authorization: "Bearer " + that.token },
+          headers: { Authorization: that.token },
           success: function(art) {
             if (!art.tags) {
               art.tags = [];
@@ -139,7 +146,7 @@ Vue.component("article-dialog", {
       $.ajax({
         url: url,
         type: method,
-        headers: { Authorization: "Bearer " + that.token },
+        headers: { Authorization: that.token },
         data: JSON.stringify(that.article),
         contentType: "application/json; charset=utf-8",
         success: function(data, status, xhr) {

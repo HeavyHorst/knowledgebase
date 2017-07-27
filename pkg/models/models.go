@@ -15,6 +15,7 @@ type Article struct {
 
 	LastModified time.Time `json:"last_modified"`
 	Tags         []string  `json:"tags,omitempty"`
+	Public       bool      `json:"public"`
 
 	// for search result highlighting
 	Fragments search.FieldFragmentMap `json:"fragments,omitempty"`
@@ -28,6 +29,7 @@ type Category struct {
 	Title        string    `json:"title"`
 	Description  string    `json:"description"`
 	LastModified time.Time `json:"last_modified"`
+	Public       bool      `json:"public"`
 
 	// for search result highlighting
 	Fragments search.FieldFragmentMap `json:"fragments,omitempty" msg:"-"`

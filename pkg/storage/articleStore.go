@@ -8,6 +8,7 @@ import (
 	"github.com/HeavyHorst/knowledgebase/pkg/models"
 	"github.com/HeavyHorst/knowledgebase/pkg/ulid"
 	"github.com/blevesearch/bleve"
+	"github.com/blevesearch/bleve/search/query"
 	"github.com/pkg/errors"
 	"github.com/russross/blackfriday"
 	"github.com/timshannon/bolthold"
@@ -85,10 +86,15 @@ func (b *ArticleStore) GetArticle(id string) (models.Article, error) {
 	return art, nil
 }
 
-func (b *ArticleStore) ListArticles(limit, offset int, sortBy string, reverse bool) ([]models.Article, int, error) {
+func (b *ArticleStore) ListArticles(limit, offset int, sortBy string, reverse bool, public bool) ([]models.Article, int, error) {
 	var result []models.Article
+	var query *bolthold.Query
 
-	err := b.store.Find(&result, nil)
+	if public {
+		query = bolthold.Where("Public").Eq(true)
+	}
+
+	err := b.store.Find(&result, query)
 	count := len(result)
 	end := offset + limit
 	if end >= count {
@@ -122,10 +128,14 @@ func (b *ArticleStore) ListArticles(limit, offset int, sortBy string, reverse bo
 	return subRes, count, errors.Wrap(err, "couldn't get list of articles")
 }
 
-func (b *ArticleStore) ListArticlesForCategory(catID string) ([]models.Article, error) {
+func (b *ArticleStore) ListArticlesForCategory(catID string, public bool) ([]models.Article, error) {
 	var result []models.Article
-	err := b.store.Find(&result, bolthold.Where("Category").Eq(catID))
+	query := bolthold.Where("Category").Eq(catID)
+	if public {
+		query = query.And("Public").Eq(true)
+	}
 
+	err := b.store.Find(&result, query)
 	sort.Slice(result, func(i, j int) bool {
 		return result[i].LastModified.After(result[j].LastModified)
 	})
@@ -222,8 +232,16 @@ func (b *ArticleStore) DeleteArticle(art models.Article) error {
 	return nil
 }
 
-func (b *ArticleStore) SearchArticles(q string) ([]models.Article, error) {
-	query := bleve.NewQueryStringQuery(q)
+func (b *ArticleStore) SearchArticles(q string, public bool) ([]models.Article, error) {
+	querystring := bleve.NewQueryStringQuery(q)
+	query := query.Query(querystring)
+
+	if public {
+		p := bleve.NewBoolFieldQuery(true)
+		p.SetField("public")
+		query = bleve.NewConjunctionQuery(p, querystring)
+	}
+
 	search := bleve.NewSearchRequestOptions(query, 150, 0, false)
 	search.Highlight = bleve.NewHighlightWithStyle("html")
 	searchResults, err := articleIndex.Search(search)

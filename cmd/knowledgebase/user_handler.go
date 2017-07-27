@@ -40,6 +40,13 @@ func requireTokenAuthentication(store UserGetter, tokenGenerator auth.TokenGener
 			var user models.User
 			token := r.Header.Get("Authorization")
 
+			if token == "" {
+				next.ServeHTTP(w, r)
+				return
+			}
+
+			fmt.Println(token)
+
 			if len(token) > 7 && token[:6] == "Bearer" {
 				token = token[7:]
 			}
@@ -70,6 +77,17 @@ func requireTokenAuthentication(store UserGetter, tokenGenerator auth.TokenGener
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
+}
+
+func requireUser(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		if _, ok := ctx.Value(contextKeyCurrentUser).(models.User); !ok {
+			http.Error(w, "Unauthorized", 401)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }
 
 func requireAdmin(next http.Handler) http.Handler {

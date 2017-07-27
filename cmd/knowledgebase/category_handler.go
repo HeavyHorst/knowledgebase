@@ -36,7 +36,7 @@ func listCategories(store CategoryLister) func(w http.ResponseWriter, r *http.Re
 			err    error
 		)
 
-		result, err = store.ListCategories()
+		result, err = store.ListCategories(!isLoggedIn(r.Context()))
 		if err != nil {
 			logAndHTTPError(w, r, 500, err.Error(), err)
 			return
@@ -55,7 +55,7 @@ func searchCategories(store CategorySearcher) func(w http.ResponseWriter, r *htt
 			return
 		}
 
-		categories, err := store.SearchCategories(r.Form.Get("q"))
+		categories, err := store.SearchCategories(r.Form.Get("q"), !isLoggedIn(r.Context()))
 		if err != nil {
 			logAndHTTPError(w, r, 500, err.Error(), err)
 			return
@@ -67,7 +67,7 @@ func searchCategories(store CategorySearcher) func(w http.ResponseWriter, r *htt
 
 func listCategoriesForCategory(store CategoryLister) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		result, err := store.ListCategoriesForCategory(chi.URLParam(r, "categoryID"))
+		result, err := store.ListCategoriesForCategory(chi.URLParam(r, "categoryID"), !isLoggedIn(r.Context()))
 		if err != nil {
 			http.Error(w, http.StatusText(404), 404)
 			return
@@ -82,6 +82,11 @@ func getCategory(w http.ResponseWriter, r *http.Request) {
 	cat, ok := ctx.Value(contextKeyCategory).(models.Category)
 	if !ok {
 		http.Error(w, http.StatusText(422), 422)
+		return
+	}
+
+	if !cat.Public && !isLoggedIn(r.Context()) {
+		http.Error(w, "Unauthorized", 401)
 		return
 	}
 

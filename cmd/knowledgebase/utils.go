@@ -1,11 +1,18 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 
 	"github.com/HeavyHorst/knowledgebase/pkg/log"
+	"github.com/HeavyHorst/knowledgebase/pkg/models"
 )
+
+func isLoggedIn(ctx context.Context) bool {
+	_, ok := ctx.Value(contextKeyCurrentUser).(models.User)
+	return ok
+}
 
 func logAndHTTPError(w http.ResponseWriter, r *http.Request, code int, httptext string, err error) {
 	logger := log.GetLogEntry(r)
