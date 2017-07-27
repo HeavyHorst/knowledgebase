@@ -81,7 +81,6 @@
                </tbody>
             </table>
          </template>
-	 <transition-group name="table-row" tag="span">
          <template v-if="view == 'articles'" v-for="article in articles">
             <div class="mdl-card mdl-shadow--2dp demo-card-square grow" :key="article.ID" :id="article.ID" v-on:click=showArticle>
                <div class="mdl-card__title">
@@ -127,7 +126,6 @@
                </div>
             </div>
          </template>
-	 </transition-group>
          <template v-if="view == 'article'">
             <div id="articlebox" style="width: 100%;">
                <div id="article" v-html="article">
