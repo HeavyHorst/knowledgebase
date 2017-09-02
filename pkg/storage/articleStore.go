@@ -3,6 +3,7 @@ package storage
 import (
 	"fmt"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/HeavyHorst/knowledgebase/pkg/models"
@@ -179,6 +180,14 @@ func (b *ArticleStore) upsertArticle(art models.Article, typ insertType, author 
 			art.Authors = art.Authors[:len(art.Authors)-1]
 		}
 	}
+
+	tmpTags := []string{}
+	for _, v := range art.Tags {
+		if strings.TrimSpace(v) != "" {
+			tmpTags = append(tmpTags, v)
+		}
+	}
+	art.Tags = tmpTags
 
 	switch typ {
 	case insertTypeCreate:
