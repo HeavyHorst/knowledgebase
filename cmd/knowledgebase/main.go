@@ -10,11 +10,11 @@ import (
 	"github.com/HeavyHorst/knowledgebase/pkg/auth"
 	"github.com/HeavyHorst/knowledgebase/pkg/log"
 	"github.com/HeavyHorst/knowledgebase/pkg/storage"
-	"github.com/Sirupsen/logrus"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/goware/cors"
 	"github.com/pressly/chi"
 	"github.com/pressly/chi/middleware"
+	"github.com/sirupsen/logrus"
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"
 )
 

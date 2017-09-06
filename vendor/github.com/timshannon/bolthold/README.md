@@ -1,4 +1,5 @@
-#BoltHold [![Build Status](https://travis-ci.org/timshannon/bolthold.svg?branch=master)](https://travis-ci.org/timshannon/bolthold) [![GoDoc](https://godoc.org/github.com/timshannon/bolthold?status.svg)](https://godoc.org/github.com/timshannon/bolthold) [![Coverage Status](https://coveralls.io/repos/github/timshannon/bolthold/badge.svg?branch=master)](https://coveralls.io/github/timshannon/bolthold?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/timshannon/bolthold)](https://goreportcard.com/report/github.com/timshannon/bolthold)
+# BoldHold 
+[![Build Status](https://travis-ci.org/timshannon/bolthold.svg?branch=master)](https://travis-ci.org/timshannon/bolthold) [![GoDoc](https://godoc.org/github.com/timshannon/bolthold?status.svg)](https://godoc.org/github.com/timshannon/bolthold) [![Coverage Status](https://coveralls.io/repos/github/timshannon/bolthold/badge.svg?branch=master)](https://coveralls.io/github/timshannon/bolthold?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/timshannon/bolthold)](https://goreportcard.com/report/github.com/timshannon/bolthold)
 
 
 BoltHold is a simple querying and indexing layer on top of a Bolt DB instance. The goal is to create a simple,
@@ -15,7 +16,7 @@ I love BoltDB, and I've used it in several projects.  However, I find myself wri
 for encoding and decoding objects and searching through data.  I figure formalizing how I've been using BoltDB 
 and including tests and benchmarks will, at a minimum, be useful to me.  Maybe it'll be useful to others as well.
 
-##Indexes
+## Indexes
 Indexes allow you to skip checking any records that don't meet your index criteria.  If you have 1000 records and only
 10 of them are of the Division you want to deal with, then you don't need to check to see if the other 990 records match
 your query criteria if you create an index on the Division field.  The downside of an index is added disk reads and writes
@@ -61,6 +62,8 @@ Fields must be exported, and thus always need to start with an upper-case letter
 * Matches Function - `Where("field").MatchFunc(func(ra *RecordAccess) (bool, error))`
 * Skip - `Where("field").Eq(value).Skip(10)`
 * Limit - `Where("field").Eq(value).Limit(10)`
+* SortBy - `Where("field").Eq(value).SortBy("field1", "field2")`
+* Reverse - `Where("field").Eq(value).SortBy("field").Reverse()`
 
 
 If you want to run a query's criteria against the Key value, you can use the `bolthold.Key` constant:
@@ -115,6 +118,31 @@ store.UpdateMatching(&Person{}, bolthold.Where("Death").Lt(bolthold.Field("Birth
 	return nil
 })
 ```
+
+### Keys in Structs
+
+A common scenario is to store the bolthold Key in the same struct that is stored in the boltDB value.  You can 
+automatically populate a record's Key in a struct by using the `boltholdKey` struct tag when running `Find` queries.
+
+```Go
+type Employee struct {
+	ID string `boltholdKey:"ID"`  // the tagName isn't required, but some linters will complain without it
+	FirstName string
+	LastName string
+	Division string
+	Hired time.Time
+}
+```
+Bolthold assumes only one of such struct tags exists. If a value already exists in the key field, it will be overwritten.
+
+If you want to insert an auto-incrementing Key you can pass the `bolthold.NextSequence()` func as the Key value.
+
+```Go
+err := store.Insert(bolthold.NextSequence(), data)
+```
+
+The key value will be a `uint`.
+
 
 ### Aggregate Queries
 

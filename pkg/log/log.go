@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/pressly/chi/middleware"
+	"github.com/sirupsen/logrus"
 )
 
 type StructuredLogger struct {
