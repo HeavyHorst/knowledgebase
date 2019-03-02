@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -18,8 +19,6 @@ import (
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"
 )
 
-const jwtSecret = "thisIsSuperSecret"
-
 var printVersionAndExit bool
 
 func init() {
@@ -27,6 +26,11 @@ func init() {
 }
 
 func main() {
+	jwtSecret, err := ioutil.ReadFile("./jwtsecret")
+	if err != nil {
+		panic(err)
+	}
+
 	flag.Parse()
 	if printVersionAndExit {
 		printVersion()
