@@ -41,10 +41,11 @@ type ArticleStore struct {
 	imageStore ImageStore
 }
 
-func newArticleStore(store *bolthold.Store, userStore *UserStore) (*ArticleStore, error) {
+func newArticleStore(store *bolthold.Store, userStore *UserStore, imageStore ImageStore) (*ArticleStore, error) {
 	return &ArticleStore{
-		store:     store,
-		userStore: userStore,
+		store:      store,
+		userStore:  userStore,
+		imageStore: imageStore,
 	}, nil
 }
 

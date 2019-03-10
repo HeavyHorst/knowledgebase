@@ -51,7 +51,7 @@ func NewBoltHoldClient(path string) (*BoltHoldClient, error) {
 		return nil, err
 	}
 
-	as, err := newArticleStore(store, us)
+	as, err := newArticleStore(store, us, is)
 	if err != nil {
 		return nil, err
 	}
