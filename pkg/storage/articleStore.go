@@ -2,8 +2,10 @@ package storage
 
 import (
 	"fmt"
+	"regexp"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/HeavyHorst/knowledgebase/pkg/models"
@@ -34,8 +36,9 @@ func init() {
 }
 
 type ArticleStore struct {
-	store     *bolthold.Store
-	userStore *UserStore
+	store      *bolthold.Store
+	userStore  *UserStore
+	imageStore ImageStore
 }
 
 func newArticleStore(store *bolthold.Store, userStore *UserStore) (*ArticleStore, error) {
@@ -187,7 +190,9 @@ func (b *ArticleStore) upsertArticle(art models.Article, typ insertType, author 
 			tmpTags = append(tmpTags, v)
 		}
 	}
+
 	art.Tags = tmpTags
+	art.Article = b.ConvertImagesToLocal(art.Article)
 
 	switch typ {
 	case insertTypeCreate:
@@ -209,6 +214,47 @@ func (b *ArticleStore) upsertArticle(art models.Article, typ insertType, author 
 	}
 
 	return nil
+}
+
+type imageMessage struct {
+	imageURL  string
+	imageHash string
+}
+
+func (b *ArticleStore) ConvertImagesToLocal(art string) string {
+	r := regexp.MustCompile(`!\[(.*)\]\((.*)\)`)
+
+	wg := sync.WaitGroup{}
+	ichan := make(chan imageMessage)
+
+	images := r.FindAllString(art, -1)
+	for _, im := range images {
+		s := strings.Split(im, "(")[1]
+		image := s[0 : len(s)-1]
+		if strings.HasPrefix(image, "/image/") {
+			continue
+		}
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			hash, _ := b.imageStore.Insert(image)
+			ichan <- imageMessage{
+				imageURL:  image,
+				imageHash: hash,
+			}
+		}()
+	}
+
+	go func() {
+		wg.Wait()
+		close(ichan)
+	}()
+
+	for u := range ichan {
+		art = strings.Replace(art, u.imageURL, "/image/"+u.imageHash, -1)
+	}
+
+	return art
 }
 
 func (b *ArticleStore) CreateArticle(art models.Article, author models.User) error {
