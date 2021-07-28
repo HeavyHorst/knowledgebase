@@ -10,10 +10,10 @@ import (
 	"github.com/HeavyHorst/knowledgebase/pkg/auth"
 	"github.com/HeavyHorst/knowledgebase/pkg/log"
 	"github.com/HeavyHorst/knowledgebase/pkg/storage"
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	jwt "github.com/golang-jwt/jwt"
 	"github.com/sirupsen/logrus"
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"
 )

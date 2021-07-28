@@ -8,9 +8,9 @@ import (
 
 	"github.com/HeavyHorst/knowledgebase/pkg/auth"
 	"github.com/HeavyHorst/knowledgebase/pkg/models"
-	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/pkg/errors"
 	"github.com/go-chi/chi/v5"
+	jwt "github.com/golang-jwt/jwt"
+	"github.com/pkg/errors"
 	"github.com/timshannon/bolthold"
 )
 

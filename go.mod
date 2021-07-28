@@ -4,10 +4,9 @@ go 1.16
 
 require (
 	github.com/blevesearch/bleve v1.0.14
-	github.com/boltdb/bolt v1.3.1
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/chi/v5 v5.0.3
 	github.com/go-chi/cors v1.2.0
+	github.com/golang-jwt/jwt v3.2.1+incompatible
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
 	github.com/oklog/ulid v1.3.1
