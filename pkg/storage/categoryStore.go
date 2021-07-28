@@ -54,11 +54,13 @@ func (b *CategoryStore) GetCategory(id string) (models.Category, error) {
 
 func (b *CategoryStore) ListCategories(public bool) ([]models.Category, error) {
 	var result []models.Category
-	var query *bolthold.Query
+
+	query := bolthold.Where("Category").Eq("")
 
 	if public {
-		query = bolthold.Where("Public").Eq(true)
+		query = query.And("Public").Eq(true)
 	}
+
 	err := b.store.Find(&result, query)
 
 	sort.Slice(result, func(i, j int) bool {

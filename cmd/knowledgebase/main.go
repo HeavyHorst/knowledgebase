@@ -1,25 +1,27 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"io/ioutil"
 	"net/http"
-	"os"
-	"path/filepath"
 	"time"
 
 	"github.com/HeavyHorst/knowledgebase/pkg/auth"
 	"github.com/HeavyHorst/knowledgebase/pkg/log"
 	"github.com/HeavyHorst/knowledgebase/pkg/storage"
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/goware/cors"
-	"github.com/pressly/chi"
-	"github.com/pressly/chi/middleware"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	"github.com/sirupsen/logrus"
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"
 )
 
 var printVersionAndExit bool
+
+//go:embed static
+var f embed.FS
 
 func init() {
 	flag.BoolVar(&printVersionAndExit, "version", false, "print version and exit")
@@ -72,18 +74,17 @@ func main() {
 	r.Use(middleware.Recoverer)
 
 	// static FileServer
-	workDir, _ := os.Getwd()
-	filesDir := filepath.Join(workDir, "static")
-	r.FileServer("/static", http.Dir(filesDir))
+	fs := http.FileServer(http.FS(f))
+	r.Handle("/static/*", fs)
 
 	// admin and index
-	r.Get("/", fileHandler("static/templates/index.html"))
-	r.Get("/categories", fileHandler("static/templates/index.html"))
-	r.Get("/articles/*", fileHandler("static/templates/index.html"))
-	r.Get("/image/:imageHash", imageHandler(store))
+	r.Get("/", fileHandler("static/templates/index.html", f))
+	r.Get("/categories", fileHandler("static/templates/index.html", f))
+	r.Get("/articles/*", fileHandler("static/templates/index.html", f))
+	r.Get("/image/{imageHash}", imageHandler(store))
 
 	r.Route("/admin", func(r chi.Router) {
-		r.Get("/", fileHandler("static/templates/admin.html"))
+		r.Get("/", fileHandler("static/templates/admin.html", f))
 		r.With(rta, requireAdmin).Get("/backup", backupDBHandler(store))
 	})
 
@@ -97,7 +98,7 @@ func main() {
 			r.Use(rta)
 			r.Get("/", listUsers(store))
 			r.With(requireAdmin).Post("/", createUser(store))
-			r.Route("/:username", func(r chi.Router) {
+			r.Route("/{username}", func(r chi.Router) {
 				r.Use(userCtx(store))
 				r.Get("/", getUser)
 				r.With(requireAdmin).Put("/", updateUser(store))
@@ -110,8 +111,8 @@ func main() {
 			r.Get("/", listCategories(store))
 			r.With(requireUser).Post("/", createCategory(store))
 			r.Get("/search", searchCategories(store))
-			r.Get("/category/:categoryID", listCategoriesForCategory(store))
-			r.Route("/:categoryID", func(r chi.Router) {
+			r.Get("/category/{categoryID}", listCategoriesForCategory(store))
+			r.Route("/{categoryID}", func(r chi.Router) {
 				r.Use(categoryCtx(store))
 				r.Get("/", getCategory)
 				r.With(requireUser).Put("/", updateCategory(store))
@@ -124,8 +125,8 @@ func main() {
 			r.Get("/", listArticles(store))
 			r.Post("/", createArticle(store))
 			r.Get("/search", searchArticles(store))
-			r.Get("/category/:categoryID", listArticlesForCategory(store))
-			r.Route("/:articleID", func(r chi.Router) {
+			r.Get("/category/{categoryID}", listArticlesForCategory(store))
+			r.Route("/{articleID}", func(r chi.Router) {
 				r.Use(articleCtx(store))
 				r.Get("/", getArticle)
 				r.Get("/history", getArticleHistory(store))
@@ -134,6 +135,5 @@ func main() {
 			})
 		})
 	})
-
 	http.ListenAndServe("127.0.0.1:3000", r)
 }

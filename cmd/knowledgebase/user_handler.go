@@ -10,7 +10,7 @@ import (
 	"github.com/HeavyHorst/knowledgebase/pkg/models"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
-	"github.com/pressly/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/timshannon/bolthold"
 )
 

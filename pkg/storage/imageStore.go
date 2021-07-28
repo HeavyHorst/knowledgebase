@@ -9,7 +9,7 @@ import (
 
 	"io/ioutil"
 
-	"github.com/boltdb/bolt"
+	bolt "go.etcd.io/bbolt"
 	"github.com/timshannon/bolthold"
 )
 

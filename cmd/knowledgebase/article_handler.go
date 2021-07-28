@@ -9,7 +9,7 @@ import (
 
 	"github.com/HeavyHorst/knowledgebase/pkg/models"
 	"github.com/HeavyHorst/knowledgebase/pkg/ulid"
-	"github.com/pressly/chi"
+	"github.com/go-chi/chi/v5"
 )
 
 func articleCtx(store ArticleGetter) func(next http.Handler) http.Handler {

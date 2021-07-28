@@ -6,9 +6,9 @@ import (
 	msgpack "gopkg.in/vmihailenco/msgpack.v2"
 
 	"github.com/HeavyHorst/knowledgebase/pkg/models"
-	"github.com/boltdb/bolt"
 	"github.com/pkg/errors"
 	"github.com/timshannon/bolthold"
+	bolt "go.etcd.io/bbolt"
 )
 
 // custom msgpack decoding function for bolthold (faster than gobs)

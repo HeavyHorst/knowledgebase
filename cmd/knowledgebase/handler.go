@@ -1,10 +1,10 @@
 package main
 
 import (
-	"io/ioutil"
+	"io/fs"
 	"net/http"
 
-	"github.com/pressly/chi"
+	"github.com/go-chi/chi/v5"
 )
 
 func backupDBHandler(store Backuper) func(w http.ResponseWriter, r *http.Request) {
@@ -18,11 +18,11 @@ func backupDBHandler(store Backuper) func(w http.ResponseWriter, r *http.Request
 }
 
 // a filehandler to serve some static files
-func fileHandler(path string) func(w http.ResponseWriter, r *http.Request) {
+func fileHandler(path string, f fs.FS) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Vary", "Accept-Encoding")
 		w.Header().Set("Cache-Control", "public, max-age=3600")
-		data, err := ioutil.ReadFile(path)
+		data, err := fs.ReadFile(f, path)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

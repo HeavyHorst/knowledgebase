@@ -239,7 +239,7 @@ const app = new Vue({
     fetchAllCategories: function() {
       var that = this;
 
-      this.fetchCategories("/api/categories/category/", function(json) {
+      this.fetchCategories("/api/categories/", function(json) {
         if (json) {
           that.categories = json;
         } else {
