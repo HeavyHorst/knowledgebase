@@ -152,7 +152,7 @@ $(document).ready(function() {
       fetchAllCategories: function() {
         var that = this;
         $.ajax({
-          url: "/api/categories/category/",
+          url: "/api/categories/",
           type: "GET",
           headers: { Authorization: that.token },
           success: function(json) {
